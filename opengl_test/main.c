@@ -1,4 +1,4 @@
-#include "gtkglx.h"
+#include "gtkgl.h"
 
 #define DRAW_STH_NORMAL 0
 #define DRAW_STH_RECT 1
@@ -70,19 +70,19 @@ static void opengl_scene_configure (void)
 
 static void draw_a_sphere (unsigned int solid, double radius, int slices, int stacks)
 {
-        GLUquadricObj *quadObj = NULL;
+	GLUquadricObj *quadObj = NULL;
 	glColor3f(1.0, 1.0, 1.0);
 	glLoadIdentity ();
 
-        quadObj = gluNewQuadric ();
+	quadObj = gluNewQuadric ();
 
-        if (solid)
-                gluQuadricDrawStyle (quadObj, GLU_FILL);
-        else
-                gluQuadricDrawStyle (quadObj, GLU_LINE);
+	if (solid)
+		gluQuadricDrawStyle (quadObj, GLU_FILL);
+	else
+		gluQuadricDrawStyle (quadObj, GLU_LINE);
 
-        gluQuadricNormals (quadObj, GLU_SMOOTH);
-        gluSphere (quadObj, radius, slices, stacks);
+	gluQuadricNormals (quadObj, GLU_SMOOTH);
+	gluSphere (quadObj, radius, slices, stacks);
 }
 
 gint rect_cnt = 0;
@@ -221,8 +221,8 @@ static void opengl_scene_display (void)
 	gtk_widget_get_allocation (main_window_sub_widget.gl_window, &alc);
 
         /* 背景 */
-        glClearColor (0.2, 0.4, 0.6, 1.0);
-        glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClearColor (0.2, 0.4, 0.6, 1.0);
+	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glViewport (0, 0, alc.width, alc.height);
 
@@ -240,53 +240,46 @@ static void opengl_scene_display (void)
 
 static void glwidget_show (GtkWidget *widget, gpointer userdata)
 {
-	gint attributes[] ={GLX_RGBA,
-                            GLX_RED_SIZE, 8,
-                            GLX_GREEN_SIZE, 8,
-                            GLX_BLUE_SIZE, 8,
-                            GLX_DEPTH_SIZE,24,
-                            GLX_DOUBLEBUFFER,
-                            None};
-        
-        gtk_glx_enable (widget, attributes);
-	gtk_glx_make_current (widget);
+	gtk_gl_enable (widget);
+	gtk_gl_make_current (widget);
 
-        opengl_scene_init ();
+	opengl_scene_init ();
 	init_flag = TRUE;
 	//g_print("glwidget_show\r\n");
 }
 
 static gboolean glwidget_configure (GtkWidget *widget, GdkEventConfigure *event, gpointer userdata)
 {       
-        GtkAllocation alc;
+	GtkAllocation alc;
 	//g_print("glwidget_configure\r\n");
 	if (init_flag == FALSE)
 	{
 		glwidget_show(widget, NULL);
 	}
-        gtk_widget_get_allocation (widget, &alc);
+	gtk_widget_get_allocation (widget, &alc);
        
-        gtk_glx_make_current (widget);
+	gtk_gl_make_current (widget);
 
-        glViewport (0, 0, alc.width, alc.height);
+	glViewport (0, 0, alc.width, alc.height);
 	opengl_scene_configure ();
         
-        return TRUE;
+	return TRUE;
 }
 
 static gint glwidget_draw (GtkWidget *widget, cairo_t *cr, gpointer userdata)
 {       
-        gtk_glx_make_current (widget);
-        opengl_scene_display ();
-        gtk_glx_swap_buffers (widget);
+	gtk_gl_make_current (widget);
 
-	//g_print("glwidget_draw\r\n");
-        return TRUE;
+	opengl_scene_display ();
+
+	gtk_gl_swap_buffers (widget);
+ 
+	return TRUE;
 }
 
 static void glwidget_destory (GtkWidget *widget,  gpointer userdata)
 {
-        gtk_glx_disable (widget);
+        gtk_gl_disable (widget);
 }
 
 int main (int argc, char **argv)
@@ -294,24 +287,25 @@ int main (int argc, char **argv)
 	GError *err = NULL;
 	GtkBuilder *builder;
 
-        gtk_init (&argc, &argv);
+	gtk_init (&argc, &argv);
  
 	builder = gtk_builder_new();
 	gtk_builder_add_from_file(builder, "demo.glade", &err);
 	gtk_builder_connect_signals(builder, NULL);
 
 	main_window_sub_widget.main_window = GTK_WIDGET(gtk_builder_get_object(builder, "main_window"));
-        gtk_window_set_title (GTK_WINDOW (main_window_sub_widget.main_window), "The OpenGL support of GTK+ 3.0");
+	gtk_window_set_title (GTK_WINDOW (main_window_sub_widget.main_window), "The OpenGL support of GTK+ 3.0");
 	g_signal_connect (main_window_sub_widget.main_window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
 
-        main_window_sub_widget.gl_window = GTK_WIDGET(gtk_builder_get_object(builder, "drawingarea1"));
-        g_signal_connect (main_window_sub_widget.gl_window, "configure-event", G_CALLBACK (glwidget_configure), NULL);
-        g_signal_connect (main_window_sub_widget.gl_window, "draw", G_CALLBACK (glwidget_draw), NULL);
-        g_signal_connect (main_window_sub_widget.gl_window, "destroy", G_CALLBACK (glwidget_destory), NULL);
+	main_window_sub_widget.gl_window = GTK_WIDGET(gtk_builder_get_object(builder, "drawingarea1"));
+	g_signal_connect (main_window_sub_widget.gl_window, "configure-event", G_CALLBACK (glwidget_configure), NULL);
+	g_signal_connect (main_window_sub_widget.gl_window, "draw", G_CALLBACK (glwidget_draw), NULL);
+	g_signal_connect (main_window_sub_widget.gl_window, "destroy", G_CALLBACK (glwidget_destory), NULL);
 
-        gtk_widget_show_all(main_window_sub_widget.main_window);
+	g_object_unref(G_OBJECT(builder));
+	gtk_widget_show_all(main_window_sub_widget.main_window);
 
-        gtk_main ();
+	gtk_main ();
         
-        return 0;
+	return 0;
 }
