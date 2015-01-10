@@ -1,3 +1,4 @@
+#include <math.h>
 #include "gtkgl.h"
 
 #define DRAW_STH_NORMAL 0
@@ -16,7 +17,10 @@ typedef struct{
 }MainWindowSubWidget;
 
 MainWindowSubWidget main_window_sub_widget = {0};
+gint animation_flag = FALSE;
+gint animation_index = 0;
 
+gboolean animation_timer_handler(gpointer user_data);
 static gint glwidget_draw (GtkWidget *widget, cairo_t *cr, gpointer userdata);
 
 G_MODULE_EXPORT void do_btn_draw_rect(GtkButton *button, gpointer data)
@@ -46,7 +50,15 @@ G_MODULE_EXPORT void do_btn_draw_split(GtkButton *button, gpointer data)
 G_MODULE_EXPORT void do_btn_draw_wheel(GtkButton *button, gpointer data)
 {
 	draw_sth_flag = DRAW_STH_WHEEL;
-	glwidget_draw(main_window_sub_widget.gl_window, NULL, NULL);
+	if (animation_flag)
+	{
+		animation_flag = FALSE;
+	}
+	else
+	{
+		animation_flag = TRUE;
+		g_timeout_add(500, animation_timer_handler, NULL);
+	}
 }
 
 static void opengl_scene_init (void)
@@ -83,6 +95,25 @@ static void draw_a_sphere (unsigned int solid, double radius, int slices, int st
 
 	gluQuadricNormals (quadObj, GLU_SMOOTH);
 	gluSphere (quadObj, radius, slices, stacks);
+}
+
+#define PI 3.141592653589793
+static void draw_a_circle (double radius, int slices)
+{
+	GLfloat vertices[slices * 2];
+	gint i;
+	GLfloat angle;
+
+	glEnableClientState (GL_VERTEX_ARRAY);
+	for (i = 0; i < slices; i++)
+	{
+		angle = 2 * PI * i  / slices;
+		vertices[i * 2] = radius * sin(angle);
+		vertices[i * 2 + 1] = radius * cos(angle);
+	}
+	glVertexPointer (2, GL_FLOAT, 0, vertices);
+	glDrawArrays(GL_POLYGON, 0, slices);
+	glDisableClientState (GL_VERTEX_ARRAY);
 }
 
 gint rect_cnt = 0;
@@ -209,10 +240,33 @@ static void draw_split()
 	draw_a_sphere (1, 0.5f, 100, 100);
 }
 
-static void draw_wheel()
+static void draw_wheel(gint index)
 {
-	glColor3f(1.0, 1.0, 1.0);
-	glLoadIdentity ();
+	gint i;
+	for (i = 0; i < 8; i++)
+	{
+		glPushMatrix();
+		glColor3f(0.125 * i, 0.125 * i, 0.0);
+		glRotatef (45.0 * (i + index), 0.0, 0.0, 1.0);
+		glTranslatef(0.5, 0 , 0);
+		draw_a_circle(0.1, 36);
+		glPopMatrix();
+	}
+}
+
+gboolean animation_timer_handler(gpointer user_data)
+{
+	if (animation_flag)
+	{
+		animation_index++;
+		animation_index = animation_index % 8;
+		glwidget_draw(main_window_sub_widget.gl_window, NULL, NULL);
+		return TRUE;
+	}
+	else
+	{
+		return FALSE;
+	}
 }
 
 static void opengl_scene_display (void)
@@ -234,7 +288,7 @@ static void opengl_scene_display (void)
 	case DRAW_STH_TEST1:  draw_a_test1(); break;
 	case DRAW_STH_ROTATE:  draw_rotate(); break;
 	case DRAW_STH_SPLIT:  draw_split(); break;
-	case DRAW_STH_WHEEL:  draw_wheel(); break;
+	case DRAW_STH_WHEEL:  draw_wheel(animation_index); break;
 	}
 }
 
