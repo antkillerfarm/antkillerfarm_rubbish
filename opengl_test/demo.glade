@@ -110,11 +110,12 @@
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="button6">
-                <property name="label" translatable="yes">button</property>
+              <object class="GtkButton" id="btn_draw_light">
+                <property name="label" translatable="yes">Light</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
+                <signal name="clicked" handler="do_btn_draw_light" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>

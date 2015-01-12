@@ -7,6 +7,7 @@
 #define DRAW_STH_ROTATE 3
 #define DRAW_STH_SPLIT 4
 #define DRAW_STH_WHEEL 5
+#define DRAW_STH_LIGHT 6
 
 gboolean init_flag = FALSE;
 gint draw_sth_flag = DRAW_STH_NORMAL;
@@ -59,6 +60,12 @@ G_MODULE_EXPORT void do_btn_draw_wheel(GtkButton *button, gpointer data)
 		animation_flag = TRUE;
 		g_timeout_add(500, animation_timer_handler, NULL);
 	}
+}
+
+G_MODULE_EXPORT void do_btn_draw_light(GtkButton *button, gpointer data)
+{
+	draw_sth_flag = DRAW_STH_LIGHT;
+	glwidget_draw(main_window_sub_widget.gl_window, NULL, NULL);
 }
 
 static void opengl_scene_init (void)
@@ -233,8 +240,8 @@ static void draw_split()
 	glViewport (alc.width / 2, 0, alc.width / 2, alc.height / 2);
 	draw_a_test1();
 
-	glViewport (0, alc.height / 2, alc.width / 2, alc.height / 2);
-	draw_a_rect();
+	//glViewport (0, alc.height / 2, alc.width / 2, alc.height / 2);
+	//draw_a_rect();
 
 	glViewport (alc.width / 2, alc.height / 2, alc.width / 2, alc.height / 2);
 	draw_a_sphere (1, 0.5f, 100, 100);
@@ -269,6 +276,25 @@ gboolean animation_timer_handler(gpointer user_data)
 	}
 }
 
+static void draw_light()
+{
+	GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
+	GLfloat mat_shininess[] = { 50.0 };
+	GLfloat light_position[] = { 1.0, 1.0, 1.0, 0.0 };
+
+	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+	glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+	glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+	glDepthFunc(GL_LESS);
+	glEnable(GL_DEPTH_TEST);
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	draw_a_sphere (1, 0.5f, 100, 100);
+}
+
 static void opengl_scene_display (void)
 {
 	GtkAllocation alc;
@@ -289,6 +315,7 @@ static void opengl_scene_display (void)
 	case DRAW_STH_ROTATE:  draw_rotate(); break;
 	case DRAW_STH_SPLIT:  draw_split(); break;
 	case DRAW_STH_WHEEL:  draw_wheel(animation_index); break;
+	case DRAW_STH_LIGHT:  draw_light(); break;
 	}
 }
 
