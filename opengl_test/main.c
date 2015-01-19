@@ -68,6 +68,16 @@ G_MODULE_EXPORT void do_btn_draw_light(GtkButton *button, gpointer data)
 	glwidget_draw(main_window_sub_widget.gl_window, NULL, NULL);
 }
 
+G_MODULE_EXPORT void cb_draw_type_changed(GtkComboBox *widget, gpointer user_data)
+{
+	draw_sth_flag = gtk_combo_box_get_active(widget);
+}
+
+G_MODULE_EXPORT void do_btn_cb_draw(GtkButton *button, gpointer data)
+{
+	glwidget_draw(main_window_sub_widget.gl_window, NULL, NULL);
+}
+
 static void opengl_scene_init (void)
 {
 
@@ -226,13 +236,13 @@ static void draw_split()
 	gtk_widget_get_allocation (main_window_sub_widget.gl_window, &alc);
 
 	glColor3f(1.0, 1.0, 1.0);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity ();
+	//glMatrixMode(GL_PROJECTION);
+	//glLoadIdentity ();
 
-	gluPerspective(1, 1, 2, 20);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity ();
-	gluLookAt (0, 0, -5, 0, 0, 0, 0, 1, 0);
+	//gluPerspective(1, 1, 2, 20);
+	//glMatrixMode(GL_MODELVIEW);
+	//glLoadIdentity ();
+	//gluLookAt (0, 0, -5, 0, 0, 0, 0, 1, 0);
 
 	glViewport (0, 0, alc.width / 2, alc.height / 2);
 	draw_rotate();

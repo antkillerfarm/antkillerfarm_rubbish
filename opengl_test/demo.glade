@@ -9,10 +9,25 @@
     </columns>
     <data>
       <row>
+        <col id="0" translatable="yes">Normal</col>
+      </row>
+      <row>
         <col id="0" translatable="yes">Rect</col>
       </row>
       <row>
         <col id="0" translatable="yes">Test1</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Rotate</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Split</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Wheel</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Light</col>
       </row>
     </data>
   </object>
@@ -155,6 +170,8 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="model">liststore_draw</property>
+                <property name="active">0</property>
+                <signal name="changed" handler="cb_draw_type_changed" swapped="no"/>
                 <child>
                   <object class="GtkCellRendererText" id="cellrenderertext1"/>
                   <attributes>
@@ -174,6 +191,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
+                <signal name="clicked" handler="do_btn_cb_draw" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
