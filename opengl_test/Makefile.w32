@@ -8,4 +8,4 @@ demo: main.o gtkwgl.o
 	gcc -g $(CFLAGS) -o $@ -c $^
 
 clean:
-	rm demo *.o
+	del demo *.o

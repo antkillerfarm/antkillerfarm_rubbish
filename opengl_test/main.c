@@ -71,10 +71,12 @@ G_MODULE_EXPORT void do_btn_draw_light(GtkButton *button, gpointer data)
 G_MODULE_EXPORT void cb_draw_type_changed(GtkComboBox *widget, gpointer user_data)
 {
 	draw_sth_flag = gtk_combo_box_get_active(widget);
+	animation_flag = FALSE;
 }
 
 G_MODULE_EXPORT void do_btn_cb_draw(GtkButton *button, gpointer data)
 {
+	animation_flag = TRUE;
 	glwidget_draw(main_window_sub_widget.gl_window, NULL, NULL);
 }
 
@@ -290,7 +292,18 @@ static void draw_light()
 {
 	GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
 	GLfloat mat_shininess[] = { 50.0 };
-	GLfloat light_position[] = { 1.0, 1.0, 1.0, 0.0 };
+	GLfloat light_position[] = { 0.0, 0.0, 1.0, 0.0 };
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho (-1.5, 1.5, -1.5, 
+	    1.5, -10.0, 10.0);
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity ();
+	//glPushMatrix();
+	//gluLookAt (0, 0, 5, 0, 0, 1, 0, 1, 0);
+	//glPopMatrix();
 
 	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
 	glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
@@ -302,11 +315,26 @@ static void draw_light()
 	glEnable(GL_DEPTH_TEST);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//gluLookAt (0, 1, -1, 0, 0, 0, 0, 1, 1);
+
+        glBegin(GL_POLYGON);
+	glVertex2f(-0.5,-0.5);
+	glVertex2f(-0.5,0.5);
+	glVertex2f(0.5,0.5);
+	glVertex2f(0.5,-0.5);
+	glEnd();
+
+	glFlush();
 	draw_a_sphere (1, 0.5f, 100, 100);
+
 }
 
 static void opengl_scene_display (void)
 {
+	if (animation_flag == FALSE)
+	{
+		return;
+	}
 	GtkAllocation alc;
 	gtk_widget_get_allocation (main_window_sub_widget.gl_window, &alc);
 
