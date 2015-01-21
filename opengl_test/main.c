@@ -76,7 +76,22 @@ G_MODULE_EXPORT void cb_draw_type_changed(GtkComboBox *widget, gpointer user_dat
 
 G_MODULE_EXPORT void do_btn_cb_draw(GtkButton *button, gpointer data)
 {
-	animation_flag = TRUE;
+	if (draw_sth_flag == DRAW_STH_WHEEL)
+	{
+		if (animation_flag)
+		{
+			animation_flag = FALSE;
+		}
+		else
+		{
+			animation_flag = TRUE;
+			g_timeout_add(500, animation_timer_handler, NULL);
+		}
+	}
+	else
+	{
+		animation_flag = TRUE;
+	}
 	glwidget_draw(main_window_sub_widget.gl_window, NULL, NULL);
 }
 
@@ -290,10 +305,14 @@ gboolean animation_timer_handler(gpointer user_data)
 
 static void draw_light()
 {
-	GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
-	GLfloat mat_shininess[] = { 50.0 };
-	GLfloat light_position[] = { 0.0, 0.0, 1.0, 0.0 };
+	GtkAllocation alc;
+	gtk_widget_get_allocation (main_window_sub_widget.gl_window, &alc);
 
+	GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
+	GLfloat mat_shininess[] = { 0.0 };
+	GLfloat light_position[] = { 1.0, 1.0, 1.0, 0.0 };
+
+	glViewport (0, 0, alc.width / 2, alc.height / 2);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glOrtho (-1.5, 1.5, -1.5, 
@@ -317,16 +336,30 @@ static void draw_light()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	//gluLookAt (0, 1, -1, 0, 0, 0, 0, 1, 1);
 
-        glBegin(GL_POLYGON);
+        /*glBegin(GL_POLYGON);
 	glVertex2f(-0.5,-0.5);
 	glVertex2f(-0.5,0.5);
 	glVertex2f(0.5,0.5);
 	glVertex2f(0.5,-0.5);
 	glEnd();
 
-	glFlush();
-	draw_a_sphere (1, 0.5f, 100, 100);
+	glFlush();*/
+	draw_a_sphere (1, 0.7f, 100, 100);
 
+	glViewport (alc.width / 2, 0, alc.width / 2, alc.height / 2);
+	mat_shininess[0] = 30.0;
+	glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+	draw_a_sphere (1, 0.7f, 100, 100);
+
+	glViewport (0, alc.height / 2, alc.width / 2, alc.height / 2);
+	mat_shininess[0] = 70.0;
+	glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+	draw_a_sphere (1, 0.7f, 100, 100);
+
+	glViewport (alc.width / 2, alc.height / 2, alc.width / 2, alc.height / 2);
+	mat_shininess[0] = 100.0;
+	glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+	draw_a_sphere (1, 0.7f, 100, 100);
 }
 
 static void opengl_scene_display (void)
