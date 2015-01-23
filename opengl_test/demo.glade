@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.16.1 -->
 <interface>
-  <requires lib="gtk+" version="3.10"/>
+  <!-- interface-requires gtk+ 3.10 -->
   <object class="GtkAdjustment" id="adjustment1">
     <property name="upper">100</property>
     <property name="step_increment">1</property>
@@ -46,6 +45,7 @@
       </row>
     </data>
   </object>
+  <object class="GtkListStore" id="liststore_sub"/>
   <object class="GtkWindow" id="main_window">
     <property name="can_focus">False</property>
     <child>
@@ -99,6 +99,17 @@
                   </packing>
                 </child>
                 <child>
+                  <object class="GtkComboBox" id="combobox2">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
                   <object class="GtkButton" id="btn_cb_draw">
                     <property name="label" translatable="yes">Draw</property>
                     <property name="visible">True</property>
@@ -109,7 +120,7 @@
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="position">1</property>
+                    <property name="position">2</property>
                   </packing>
                 </child>
               </object>

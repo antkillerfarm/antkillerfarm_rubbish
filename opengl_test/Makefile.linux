@@ -1,7 +1,7 @@
 CFLAGS = `pkg-config --cflags gtk+-3.0 gmodule-export-2.0 libxml-2.0`
 LDFLAGS = `pkg-config --libs gtk+-3.0 gmodule-export-2.0 libxml-2.0` -lGL -lGLU -lm
 
-demo: main.o gtkglx.o
+demo: main.o gtkglx.o gl_draw.o
 	gcc $^ -o $@ $(LDFLAGS)
 
 %.o: %.c
