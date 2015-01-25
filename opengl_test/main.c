@@ -18,54 +18,55 @@ MainWindowSubWidget main_window_sub_widget = {0};
 gint animation_flag = FALSE;
 gint animation_index = 0;
 
-G_MODULE_EXPORT void do_btn_draw_rect(GtkButton *button, gpointer data)
-{
-	draw_sth_flag = DRAW_STH_RECT;
-	glwidget_draw(main_window_sub_widget.gl_window, NULL, NULL);
-}
+#define DRAW_STH_NUM 2
+#define DRAW_SHAPE_NUM 3
+#define DRAW_LIGHT_NUM 1
 
-G_MODULE_EXPORT void do_btn_draw_test1(GtkButton *button, gpointer data)
-{
-	draw_sth_flag = DRAW_STH_TEST1;
-	glwidget_draw(main_window_sub_widget.gl_window, NULL, NULL);
-}
 
-G_MODULE_EXPORT void do_btn_draw_rotate(GtkButton *button, gpointer data)
+DrawSthSubItem draw_shape[DRAW_SHAPE_NUM] = 
 {
-	draw_sth_flag = DRAW_STH_ROTATE;
-	glwidget_draw(main_window_sub_widget.gl_window, NULL, NULL);
-}
+	"Rect", draw_a_rect,
+	"Sphere", draw_sphere,
+	"Rotate", draw_rotate
+};
 
-G_MODULE_EXPORT void do_btn_draw_split(GtkButton *button, gpointer data)
+DrawSthSubItem draw_light[DRAW_LIGHT_NUM] = 
 {
-	draw_sth_flag = DRAW_STH_SPLIT;
-	glwidget_draw(main_window_sub_widget.gl_window, NULL, NULL);
-}
+	"Split", draw_light_split
+};
 
-G_MODULE_EXPORT void do_btn_draw_wheel(GtkButton *button, gpointer data)
+DrawSthItem draw_sth_item[DRAW_STH_NUM] = 
 {
-	draw_sth_flag = DRAW_STH_WHEEL;
-	if (animation_flag)
+	"Shape", DRAW_SHAPE_NUM, draw_shape,
+	"Light", DRAW_LIGHT_NUM, draw_light
+};
+
+DrawSthData draw_sth_data = 
+{
+	DRAW_STH_NUM, draw_sth_item
+};
+
+void update_cb_draw_type(gint index)
+{
+	gint i;
+	GtkTreeIter iter;
+	DrawSthItem *item = &(draw_sth_data.data[index]);
+	
+	gtk_list_store_clear(main_window_sub_widget.liststore_sub);
+	for (i = 0; i < item->num; i++)
 	{
-		animation_flag = FALSE;
+		gtk_list_store_append(main_window_sub_widget.liststore_sub, &iter);
+		gtk_list_store_set(main_window_sub_widget.liststore_sub, &iter, 0, item->sub_data[i].name, -1);
 	}
-	else
-	{
-		animation_flag = TRUE;
-		g_timeout_add(500, animation_timer_handler, NULL);
-	}
-}
-
-G_MODULE_EXPORT void do_btn_draw_light(GtkButton *button, gpointer data)
-{
-	draw_sth_flag = DRAW_STH_LIGHT;
-	glwidget_draw(main_window_sub_widget.gl_window, NULL, NULL);
+	gtk_combo_box_set_active(main_window_sub_widget.cb_draw_sub, 0);
 }
 
 G_MODULE_EXPORT void cb_draw_type_changed(GtkComboBox *widget, gpointer user_data)
 {
 	draw_sth_flag = gtk_combo_box_get_active(widget);
 	animation_flag = FALSE;
+	//gdouble value = gtk_adjustment_get_value(main_window_sub_widget.adjustment[0]);
+	//g_print("v:%f\r\n", value);
 }
 
 G_MODULE_EXPORT void do_btn_cb_draw(GtkButton *button, gpointer data)
@@ -86,7 +87,7 @@ G_MODULE_EXPORT void do_btn_cb_draw(GtkButton *button, gpointer data)
 	{
 		animation_flag = TRUE;
 	}
-	glwidget_draw(main_window_sub_widget.gl_window, NULL, NULL);
+	gtk_widget_queue_draw(main_window_sub_widget.gl_window);
 }
 
 static void opengl_scene_init (void)
@@ -126,13 +127,13 @@ static void opengl_scene_display (void)
         /* 绘制几何体 */
 	switch(draw_sth_flag)
 	{
-	case DRAW_STH_NORMAL:  draw_a_sphere (1, 0.5f, 100, 100); break;
+	case DRAW_STH_NORMAL:  draw_sphere (); break;
 	case DRAW_STH_RECT:  draw_a_rect(); break;
 	case DRAW_STH_TEST1:  draw_a_test1(); break;
 	case DRAW_STH_ROTATE:  draw_rotate(); break;
 	case DRAW_STH_SPLIT:  draw_split(); break;
-	case DRAW_STH_WHEEL:  draw_wheel(animation_index); break;
-	case DRAW_STH_LIGHT:  draw_light(); break;
+	case DRAW_STH_WHEEL:  draw_wheel(); break;
+	case DRAW_STH_LIGHT:  draw_light_split(); break;
 	}
 }
 
@@ -180,6 +181,19 @@ static void glwidget_destory (GtkWidget *widget,  gpointer userdata)
         gtk_gl_disable (widget);
 }
 
+void init_cb_draw()
+{
+	gint i;
+	GtkTreeIter iter;
+	for (i = 0; i < draw_sth_data.num; i++)
+	{
+		gtk_list_store_append(main_window_sub_widget.liststore_draw, &iter);
+		gtk_list_store_set(main_window_sub_widget.liststore_draw, &iter, 0, draw_sth_data.data[i].name, -1);
+	}
+	gtk_combo_box_set_active(main_window_sub_widget.cb_draw_type, 0);
+	update_cb_draw_type(0);
+}
+
 int main (int argc, char **argv)
 {
 	GError *err = NULL;
@@ -199,6 +213,18 @@ int main (int argc, char **argv)
 	g_signal_connect (main_window_sub_widget.gl_window, "configure-event", G_CALLBACK (glwidget_configure), NULL);
 	g_signal_connect (main_window_sub_widget.gl_window, "draw", G_CALLBACK (glwidget_draw), NULL);
 	g_signal_connect (main_window_sub_widget.gl_window, "destroy", G_CALLBACK (glwidget_destory), NULL);
+
+	main_window_sub_widget.adjustment[0] = GTK_ADJUSTMENT(gtk_builder_get_object(builder, "adjustment0"));
+	main_window_sub_widget.adjustment[1] = GTK_ADJUSTMENT(gtk_builder_get_object(builder, "adjustment1"));
+	main_window_sub_widget.adjustment[2] = GTK_ADJUSTMENT(gtk_builder_get_object(builder, "adjustment2"));
+
+	main_window_sub_widget.cb_draw_type = GTK_COMBO_BOX(gtk_builder_get_object(builder, "cb_draw_type"));
+	main_window_sub_widget.cb_draw_sub = GTK_COMBO_BOX(gtk_builder_get_object(builder, "cb_draw_sub"));
+
+	main_window_sub_widget.liststore_draw = GTK_LIST_STORE(gtk_builder_get_object(builder, "liststore_draw"));
+	main_window_sub_widget.liststore_sub = GTK_LIST_STORE(gtk_builder_get_object(builder, "liststore_sub"));
+
+	init_cb_draw();
 
 	g_object_unref(G_OBJECT(builder));
 	gtk_widget_show_all(main_window_sub_widget.main_window);

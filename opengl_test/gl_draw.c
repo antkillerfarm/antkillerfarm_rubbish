@@ -20,6 +20,11 @@ void draw_a_sphere (unsigned int solid, double radius, int slices, int stacks)
 	gluSphere (quadObj, radius, slices, stacks);
 }
 
+void draw_sphere()
+{
+	draw_a_sphere (1, 0.5f, 100, 100);
+}
+
 #define PI 3.141592653589793
 void draw_a_circle (double radius, int slices)
 {
@@ -163,7 +168,7 @@ void draw_split()
 	draw_a_sphere (1, 0.5f, 100, 100);
 }
 
-void draw_wheel(gint index)
+void draw_a_wheel(gint index)
 {
 	gint i;
 	for (i = 0; i < 8; i++)
@@ -175,6 +180,11 @@ void draw_wheel(gint index)
 		draw_a_circle(0.1, 36);
 		glPopMatrix();
 	}
+}
+
+void draw_wheel()
+{
+	draw_a_wheel(animation_index);
 }
 
 gboolean animation_timer_handler(gpointer user_data)
@@ -192,7 +202,7 @@ gboolean animation_timer_handler(gpointer user_data)
 	}
 }
 
-void draw_light()
+void draw_light_split()
 {
 	GtkAllocation alc;
 	gtk_widget_get_allocation (main_window_sub_widget.gl_window, &alc);
