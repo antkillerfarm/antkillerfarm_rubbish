@@ -3,25 +3,17 @@
 #include "gl_draw.h"
 #include "app.h"
 
-#define DRAW_STH_NORMAL 0
-#define DRAW_STH_RECT 1
-#define DRAW_STH_TEST1 2
-#define DRAW_STH_ROTATE 3
-#define DRAW_STH_SPLIT 4
-#define DRAW_STH_WHEEL 5
-#define DRAW_STH_LIGHT 6
-
 gboolean init_flag = FALSE;
-gint draw_sth_flag = DRAW_STH_NORMAL;
 
 MainWindowSubWidget main_window_sub_widget = {0};
 gint animation_flag = FALSE;
 gint animation_index = 0;
+DrawSthItem *draw_item_active = NULL;
+DrawCB draw_cb_active = NULL;
 
 #define DRAW_STH_NUM 2
 #define DRAW_SHAPE_NUM 3
 #define DRAW_LIGHT_NUM 1
-
 
 DrawSthSubItem draw_shape[DRAW_SHAPE_NUM] = 
 {
@@ -58,35 +50,31 @@ void update_cb_draw_type(gint index)
 		gtk_list_store_append(main_window_sub_widget.liststore_sub, &iter);
 		gtk_list_store_set(main_window_sub_widget.liststore_sub, &iter, 0, item->sub_data[i].name, -1);
 	}
+
+	draw_item_active = item;
+	draw_cb_active  = draw_item_active->sub_data[0].draw_cb;
 	gtk_combo_box_set_active(main_window_sub_widget.cb_draw_sub, 0);
 }
 
 G_MODULE_EXPORT void cb_draw_type_changed(GtkComboBox *widget, gpointer user_data)
 {
-	draw_sth_flag = gtk_combo_box_get_active(widget);
+	gint index = gtk_combo_box_get_active(widget);
+	update_cb_draw_type(index);
 	animation_flag = FALSE;
 	//gdouble value = gtk_adjustment_get_value(main_window_sub_widget.adjustment[0]);
 	//g_print("v:%f\r\n", value);
 }
 
+G_MODULE_EXPORT void cb_draw_sub_changed(GtkComboBox *widget, gpointer user_data)
+{
+	gint index = gtk_combo_box_get_active(widget);
+	draw_cb_active = draw_item_active->sub_data[index].draw_cb;
+	animation_flag = FALSE;
+}
+
 G_MODULE_EXPORT void do_btn_cb_draw(GtkButton *button, gpointer data)
 {
-	if (draw_sth_flag == DRAW_STH_WHEEL)
-	{
-		if (animation_flag)
-		{
-			animation_flag = FALSE;
-		}
-		else
-		{
-			animation_flag = TRUE;
-			g_timeout_add(500, animation_timer_handler, NULL);
-		}
-	}
-	else
-	{
-		animation_flag = TRUE;
-	}
+	animation_flag = TRUE;
 	gtk_widget_queue_draw(main_window_sub_widget.gl_window);
 }
 
@@ -125,16 +113,7 @@ static void opengl_scene_display (void)
 	glViewport (0, 0, alc.width, alc.height);
 
         /* 绘制几何体 */
-	switch(draw_sth_flag)
-	{
-	case DRAW_STH_NORMAL:  draw_sphere (); break;
-	case DRAW_STH_RECT:  draw_a_rect(); break;
-	case DRAW_STH_TEST1:  draw_a_test1(); break;
-	case DRAW_STH_ROTATE:  draw_rotate(); break;
-	case DRAW_STH_SPLIT:  draw_split(); break;
-	case DRAW_STH_WHEEL:  draw_wheel(); break;
-	case DRAW_STH_LIGHT:  draw_light_split(); break;
-	}
+	draw_cb_active();
 }
 
 static void glwidget_show (GtkWidget *widget, gpointer userdata)
