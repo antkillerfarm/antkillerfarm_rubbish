@@ -260,3 +260,42 @@ void draw_light_split()
 	glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
 	draw_a_sphere (1, 0.7f, 100, 100);
 }
+
+void draw_light_shininess()
+{
+	GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
+	GLfloat light_position[] = { 1.0, 1.0, 1.0, 0.0 };
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho (-1.5, 1.5, -1.5, 
+	    1.5, -10.0, 10.0);
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity ();
+	//glPushMatrix();
+	//gluLookAt (0, 0, 5, 0, 0, 1, 0, 1, 0);
+	//glPopMatrix();
+
+	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+	glMaterialfv(GL_FRONT, GL_SHININESS, adj_value);
+	glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+	glDepthFunc(GL_LESS);
+	glEnable(GL_DEPTH_TEST);
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//gluLookAt (0, 1, -1, 0, 0, 0, 0, 1, 1);
+
+        /*glBegin(GL_POLYGON);
+	glVertex2f(-0.5,-0.5);
+	glVertex2f(-0.5,0.5);
+	glVertex2f(0.5,0.5);
+	glVertex2f(0.5,-0.5);
+	glEnd();
+
+	glFlush();*/
+	draw_a_sphere (1, 0.7f, 100, 100);
+}

@@ -9,22 +9,28 @@ MainWindowSubWidget main_window_sub_widget = {0};
 gint animation_flag = FALSE;
 gint animation_index = 0;
 DrawSthItem *draw_item_active = NULL;
+DrawSthSubItem *draw_sub_active = NULL;
 DrawCB draw_cb_active = NULL;
+GLfloat adj_value[3] = {0, 0 , 0};
 
 #define DRAW_STH_NUM 2
-#define DRAW_SHAPE_NUM 3
-#define DRAW_LIGHT_NUM 1
+#define DRAW_SHAPE_NUM 6
+#define DRAW_LIGHT_NUM 2
 
 DrawSthSubItem draw_shape[DRAW_SHAPE_NUM] = 
 {
-	"Rect", draw_a_rect,
-	"Sphere", draw_sphere,
-	"Rotate", draw_rotate
+	"Rect", draw_a_rect, FALSE,
+	"Sphere", draw_sphere, FALSE,
+	"Rotate", draw_rotate, FALSE,
+	"Test1", draw_a_test1, FALSE,
+	"Split", draw_split, FALSE,
+	"Wheel", draw_wheel, TRUE
 };
 
 DrawSthSubItem draw_light[DRAW_LIGHT_NUM] = 
 {
-	"Split", draw_light_split
+	"Split", draw_light_split, FALSE,
+	"Shininess", draw_light_shininess, FALSE
 };
 
 DrawSthItem draw_sth_item[DRAW_STH_NUM] = 
@@ -52,7 +58,8 @@ void update_cb_draw_type(gint index)
 	}
 
 	draw_item_active = item;
-	draw_cb_active  = draw_item_active->sub_data[0].draw_cb;
+	draw_sub_active = &(draw_item_active->sub_data[0]);
+	draw_cb_active  = draw_sub_active->draw_cb;
 	gtk_combo_box_set_active(main_window_sub_widget.cb_draw_sub, 0);
 }
 
@@ -68,13 +75,32 @@ G_MODULE_EXPORT void cb_draw_type_changed(GtkComboBox *widget, gpointer user_dat
 G_MODULE_EXPORT void cb_draw_sub_changed(GtkComboBox *widget, gpointer user_data)
 {
 	gint index = gtk_combo_box_get_active(widget);
-	draw_cb_active = draw_item_active->sub_data[index].draw_cb;
+	draw_sub_active = &(draw_item_active->sub_data[index]);
+	draw_cb_active  = draw_sub_active->draw_cb;
 	animation_flag = FALSE;
 }
 
 G_MODULE_EXPORT void do_btn_cb_draw(GtkButton *button, gpointer data)
 {
-	animation_flag = TRUE;
+	if (draw_sub_active->is_animation == TRUE)
+	{
+		if (animation_flag)
+		{
+			animation_flag = FALSE;
+		}
+		else
+		{
+			animation_flag = TRUE;
+			g_timeout_add(50, animation_timer_handler, NULL);
+		}
+	}
+	else
+	{
+		animation_flag = TRUE;
+	}
+	adj_value[0] = gtk_adjustment_get_value(main_window_sub_widget.adjustment[0]);
+	adj_value[1] = gtk_adjustment_get_value(main_window_sub_widget.adjustment[1]);
+	adj_value[2] = gtk_adjustment_get_value(main_window_sub_widget.adjustment[2]);
 	gtk_widget_queue_draw(main_window_sub_widget.gl_window);
 }
 

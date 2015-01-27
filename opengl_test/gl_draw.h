@@ -13,5 +13,6 @@ gboolean animation_timer_handler(gpointer user_data);
 void draw_light_split();
 void draw_sphere();
 void draw_wheel();
+void draw_light_shininess();
 
 #endif /* GL_DRAW_H */
