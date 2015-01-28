@@ -80,6 +80,14 @@ G_MODULE_EXPORT void cb_draw_sub_changed(GtkComboBox *widget, gpointer user_data
 	animation_flag = FALSE;
 }
 
+void refresh_scale_value()
+{
+	adj_value[0] = gtk_adjustment_get_value(main_window_sub_widget.adjustment[0]);
+	adj_value[1] = gtk_adjustment_get_value(main_window_sub_widget.adjustment[1]);
+	adj_value[2] = gtk_adjustment_get_value(main_window_sub_widget.adjustment[2]);
+	gtk_widget_queue_draw(main_window_sub_widget.gl_window);
+}
+
 G_MODULE_EXPORT void do_btn_cb_draw(GtkButton *button, gpointer data)
 {
 	if (draw_sub_active->is_animation == TRUE)
@@ -98,10 +106,12 @@ G_MODULE_EXPORT void do_btn_cb_draw(GtkButton *button, gpointer data)
 	{
 		animation_flag = TRUE;
 	}
-	adj_value[0] = gtk_adjustment_get_value(main_window_sub_widget.adjustment[0]);
-	adj_value[1] = gtk_adjustment_get_value(main_window_sub_widget.adjustment[1]);
-	adj_value[2] = gtk_adjustment_get_value(main_window_sub_widget.adjustment[2]);
-	gtk_widget_queue_draw(main_window_sub_widget.gl_window);
+	refresh_scale_value();
+}
+
+G_MODULE_EXPORT void do_scale_changed(GtkRange *range, gpointer  user_data)
+{
+	refresh_scale_value();
 }
 
 static void opengl_scene_init (void)

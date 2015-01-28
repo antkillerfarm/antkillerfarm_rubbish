@@ -132,6 +132,7 @@
                     <property name="can_focus">True</property>
                     <property name="adjustment">adjustment0</property>
                     <property name="round_digits">1</property>
+                    <signal name="value-changed" handler="do_scale_changed" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -145,6 +146,7 @@
                     <property name="can_focus">True</property>
                     <property name="adjustment">adjustment1</property>
                     <property name="round_digits">1</property>
+                    <signal name="value-changed" handler="do_scale_changed" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -158,6 +160,7 @@
                     <property name="can_focus">True</property>
                     <property name="adjustment">adjustment2</property>
                     <property name="round_digits">6</property>
+                    <signal name="value-changed" handler="do_scale_changed" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>
