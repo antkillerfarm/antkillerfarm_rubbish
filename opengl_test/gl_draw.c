@@ -263,8 +263,16 @@ void draw_light_split()
 
 void draw_light_shininess()
 {
+	gint i;
 	GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
 	GLfloat light_position[] = { 1.0, 1.0, 1.0, 0.0 };
+	GLfloat mat_ambient[4];
+
+	for (i = 0; i < 3; i++)
+	{
+		mat_ambient[i] = adj_value[1] * 0.01;
+	}
+	mat_ambient[3] = 1.0;
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -277,6 +285,7 @@ void draw_light_shininess()
 	//gluLookAt (0, 0, 5, 0, 0, 1, 0, 1, 0);
 	//glPopMatrix();
 
+	glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
 	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
 	glMaterialfv(GL_FRONT, GL_SHININESS, adj_value);
 	glLightfv(GL_LIGHT0, GL_POSITION, light_position);
