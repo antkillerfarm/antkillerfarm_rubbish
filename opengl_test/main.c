@@ -15,7 +15,7 @@ GLfloat adj_value[3] = {0, 0 , 0};
 
 #define DRAW_STH_NUM 2
 #define DRAW_SHAPE_NUM 6
-#define DRAW_LIGHT_NUM 2
+#define DRAW_LIGHT_NUM 3
 
 DrawSthSubItem draw_shape[DRAW_SHAPE_NUM] = 
 {
@@ -30,7 +30,8 @@ DrawSthSubItem draw_shape[DRAW_SHAPE_NUM] =
 DrawSthSubItem draw_light[DRAW_LIGHT_NUM] = 
 {
 	"Split", draw_light_split, FALSE,
-	"Shininess", draw_light_shininess, FALSE
+	"Shininess", draw_light_shininess, FALSE,
+	"Shininess1", draw_light_shininess1, FALSE
 };
 
 DrawSthItem draw_sth_item[DRAW_STH_NUM] = 

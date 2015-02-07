@@ -14,5 +14,6 @@ void draw_light_split();
 void draw_sphere();
 void draw_wheel();
 void draw_light_shininess();
+void draw_light_shininess1();
 
 #endif /* GL_DRAW_H */
