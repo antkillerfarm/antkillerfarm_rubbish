@@ -11,7 +11,7 @@ gint animation_index = 0;
 DrawSthItem *draw_item_active = NULL;
 DrawSthSubItem *draw_sub_active = NULL;
 DrawCB draw_cb_active = NULL;
-GLfloat adj_value[3] = {0, 0 , 0};
+GLfloat adj_value[3] = {0, 0, 0};
 
 #define DRAW_STH_NUM 2
 #define DRAW_SHAPE_NUM 6
@@ -19,19 +19,19 @@ GLfloat adj_value[3] = {0, 0 , 0};
 
 DrawSthSubItem draw_shape[DRAW_SHAPE_NUM] = 
 {
-	"Rect", draw_a_rect, FALSE,
-	"Sphere", draw_sphere, FALSE,
-	"Rotate", draw_rotate, FALSE,
-	"Test1", draw_a_test1, FALSE,
-	"Split", draw_split, FALSE,
-	"Wheel", draw_wheel, TRUE
+	0x0, "Rect", draw_a_rect, FALSE,
+	0x1, "Sphere", draw_sphere, FALSE,
+	0x2, "Rotate", draw_rotate, FALSE,
+	0x3, "Test1", draw_a_test1, FALSE,
+	0x4, "Split", draw_split, FALSE,
+	0x5, "Wheel", draw_wheel, TRUE
 };
 
 DrawSthSubItem draw_light[DRAW_LIGHT_NUM] = 
 {
-	"Split", draw_light_split, FALSE,
-	"Shininess", draw_light_shininess, FALSE,
-	"Shininess1", draw_light_shininess1, FALSE
+	0x10, "Split", draw_light_split, FALSE,
+	0x11, "Material", draw_light_sth, FALSE,
+	0x12, "Light 2", draw_light_sth, FALSE
 };
 
 DrawSthItem draw_sth_item[DRAW_STH_NUM] = 

@@ -261,19 +261,35 @@ void draw_light_split()
 	draw_a_sphere (1, 0.7f, 100, 100);
 }
 
-void draw_light_shininess()
+GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
+GLfloat mat_shininess[] = { 50.0 };
+GLfloat mat_ambient[] = { 0.0, 0.0, 0.0, 1.0 };
+GLfloat mat_emission[] = { 0.0, 0.0, 0.0, 1.0 };
+GLfloat light_position[] = { 1.0, 1.0, 1.0, 0.0 };
+GLfloat light_specular[] = { 1.0, 1.0, 1.0, 1.0 };
+GLfloat light_ambient[] = { 0.0, 0.0, 0.0, 1.0 };
+GLfloat light2_position[] = { 1.0, 1.0, 1.0, 0.0 };
+GLfloat light2_specular[] = { 1.0, 0.0, 0.0, 0.0 };
+
+void draw_light_sth()
 {
 	gint i;
-	GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
-	GLfloat light_position[] = { 1.0, 1.0, 1.0, 0.0 };
-	GLfloat mat_ambient[4];
 
-	for (i = 0; i < 3; i++)
+	if (draw_sub_active->id == 0x11)
 	{
-		mat_ambient[i] = adj_value[1] * 0.01;
+	        mat_shininess[0] = adj_value[0];
+		for (i = 0; i < 3; i++)
+		{
+			mat_ambient[i] = adj_value[1] * 0.01;
+		}
+		mat_emission[1] = adj_value[2] * 0.01;
 	}
-	mat_ambient[3] = 1.0;
-	light_position[3] = adj_value[2] / 20;
+	else
+	{
+		light2_position[0] = adj_value[0] * 0.01 - 0.5;
+		light2_position[1] = adj_value[1] * 0.01 - 0.5;
+		light2_position[2] = adj_value[2] * 0.01 - 0.5;
+	}
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -288,59 +304,15 @@ void draw_light_shininess()
 
 	glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
 	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
-	glMaterialfv(GL_FRONT, GL_SHININESS, &(adj_value[0]));
+	glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+	glMaterialfv(GL_FRONT, GL_EMISSION, mat_emission);
 	glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+	glLightfv(GL_LIGHT1, GL_POSITION, light2_position);
+	glLightfv(GL_LIGHT1, GL_SPECULAR, light2_specular);
 
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
-	glDepthFunc(GL_LESS);
-	glEnable(GL_DEPTH_TEST);
-
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	//gluLookAt (0, 1, -1, 0, 0, 0, 0, 1, 1);
-
-        /*glBegin(GL_POLYGON);
-	glVertex2f(-0.5,-0.5);
-	glVertex2f(-0.5,0.5);
-	glVertex2f(0.5,0.5);
-	glVertex2f(0.5,-0.5);
-	glEnd();
-
-	glFlush();*/
-	draw_a_sphere (1, 0.7f, 100, 100);
-}
-
-void draw_light_shininess1()
-{
-	gint i;
-	GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
-	GLfloat light_position[] = { 1.0, 1.0, 1.0, 0.0 };
-	GLfloat mat_ambient[4];
-
-	for (i = 0; i < 3; i++)
-	{
-		mat_ambient[i] = adj_value[1] * 0.01;
-	}
-	mat_ambient[3] = 1.0;
-
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glOrtho (-1.5, 1.5, -1.5, 
-	    1.5, -10.0, 10.0);
-
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity ();
-	//glPushMatrix();
-	//gluLookAt (0, 0, 5, 0, 0, 1, 0, 1, 0);
-	//glPopMatrix();
-
-	glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
-	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
-	glMaterialfv(GL_FRONT, GL_SHININESS, adj_value);
-	glLightfv(GL_LIGHT0, GL_POSITION, light_position);
-
-	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT0);
+	glEnable(GL_LIGHT1);
 	glDepthFunc(GL_LESS);
 	glEnable(GL_DEPTH_TEST);
 

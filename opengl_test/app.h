@@ -14,6 +14,7 @@ typedef struct{
 typedef void (*DrawCB)(void);
 
 typedef struct{
+	guint id;
 	gchararray name;
 	DrawCB draw_cb;
 	gboolean is_animation;
@@ -34,6 +35,7 @@ extern MainWindowSubWidget main_window_sub_widget;
 extern gint animation_flag;
 extern gint animation_index;
 extern GLfloat adj_value[3];
+extern DrawSthSubItem *draw_sub_active;
 
 gint glwidget_draw (GtkWidget *widget, cairo_t *cr, gpointer userdata);
 
