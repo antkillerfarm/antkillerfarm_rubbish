@@ -1,0 +1,44 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MyActivity$PlaceholderFragment2">
+    <RadioGroup
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Depth"
+            android:id="@+id/rbtn_depth"
+            android:layout_weight="1" />
+
+        <RadioButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Flip Card"
+            android:id="@+id/rbtn_flip"
+            android:layout_weight="1" />
+
+        <RadioButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Default"
+            android:id="@+id/rbtn_default"
+            android:layout_weight="1" />
+    </RadioGroup>
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+        <android.support.v4.view.PagerTitleStrip
+            android:id="@+id/pager_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top" />
+    </android.support.v4.view.ViewPager>
+</LinearLayout>
