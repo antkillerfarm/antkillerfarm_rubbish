@@ -3,6 +3,8 @@ package com.example.tj.myapplication;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.PagerTitleStrip;
@@ -74,7 +76,11 @@ public class MyActivity extends Activity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
-            return inflater.inflate(R.layout.fragment_my, container, false);
+            View view = inflater.inflate(R.layout.fragment_my, container, false);
+            PanButton button = (PanButton) view.findViewById(R.id.pan_btn);
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_pan);
+            button.setTouchChecker(new BitmapTouchChecker(bitmap));
+            return view;
         }
     }
 

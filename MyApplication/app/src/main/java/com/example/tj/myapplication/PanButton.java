@@ -55,12 +55,18 @@ public class PanButton extends ImageButton
             {
                 if (touchChecker.isInTouchArea((int) event.getX(), (int) event.getY(), getWidth(), getHeight()))
                 {
+                    setImageResource(R.drawable.ic_pan_up);
                     return super.onTouchEvent(event);
                 }
                 else
                 {
                     return false;
                 }
+            }
+            else if(event.getAction() == MotionEvent.ACTION_UP)
+            {
+                setImageResource(R.drawable.ic_pan);
+                return super.onTouchEvent(event);
             }
         }
 
