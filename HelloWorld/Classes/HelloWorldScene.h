@@ -3,7 +3,7 @@
 
 #include "cocos2d.h"
 
-class HelloWorld : public cocos2d::Layer
+class HelloWorld : public cocos2d::LayerColor
 {
 public:
     // there's no 'id' in cpp, so we recommend returning the class instance pointer
@@ -14,9 +14,14 @@ public:
     
     // a selector callback
     void menuCloseCallback(cocos2d::Ref* pSender);
+    void menuAnimationCallback(cocos2d::Ref* pSender);
     
     // implement the "static create()" method manually
     CREATE_FUNC(HelloWorld);
+
+ private:
+    cocos2d::Sprite* sprite_duelist;
+    cocos2d::Animation* animation_duelist;
 };
 
 #endif // __HELLOWORLD_SCENE_H__
