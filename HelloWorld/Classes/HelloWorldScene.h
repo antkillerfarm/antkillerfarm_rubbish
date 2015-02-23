@@ -2,7 +2,6 @@
 #define __HELLOWORLD_SCENE_H__
 
 #include "cocos2d.h"
-
 class HelloWorld : public cocos2d::LayerColor
 {
 public:
@@ -20,8 +19,9 @@ public:
     CREATE_FUNC(HelloWorld);
 
  private:
-    cocos2d::Sprite* sprite_duelist;
-    cocos2d::Animation* animation_duelist;
+    cocos2d::Vec2 pos_duelist;
+    cocos2d::Sprite*  sprite_duelist;
+    //cocos2d::Animation* animation_duelist;
 };
 
 #endif // __HELLOWORLD_SCENE_H__

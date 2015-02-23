@@ -110,15 +110,20 @@ bool HelloWorld::init()
 
     animation->setDelayPerUnit(1.0f / 9.0f);
     animation->setRestoreOriginalFrame(true);
+    AnimationCache::getInstance()->addAnimation (animation, "duelist-die");
 
     auto action = Animate::create(animation);
     sprite1->runAction(RepeatForever::create(Sequence::create(action, action->reverse(), nullptr)));
 
-    sprite_duelist = Sprite::createWithTexture(texture);
-    CCLOG("Addr: %x,%x", sprite1, sprite_duelist);
-    sprite_duelist->setAnchorPoint(Vec2(0.5, 0));
-    sprite_duelist->setPosition(Vec2(visibleSize.width/2 + origin.x, origin.y + size1.height));
-    animation_duelist = animation->clone();
+    pos_duelist.set(visibleSize.width/2 + origin.x, origin.y + size1.height);
+
+    sprite_duelist = nullptr;
+
+    //sprite_duelist = Sprite::createWithTexture(texture);
+    //CCLOG("Addr: %x,%x", sprite1, sprite_duelist);
+    //sprite_duelist->setAnchorPoint(Vec2(0.5, 0));
+    //sprite_duelist->setPosition(Vec2(visibleSize.width/2 + origin.x, origin.y + size1.height));
+    //animation_duelist = animation->clone();
     //this->addChild(sprite_duelist, 0);
 
     //auto action1 = Animate::create(animation_duelist);
@@ -129,9 +134,17 @@ bool HelloWorld::init()
 
 void HelloWorld::menuAnimationCallback(Ref* pSender)
 {
-  this->addChild(sprite_duelist, 0);
-  //auto action = Animate::create(animation_duelist);
-  //sprite_duelist->runAction(Sequence::create(action, action->reverse(), nullptr));
+  if (sprite_duelist == nullptr)
+    {
+      auto texture = Director::getInstance()->getTextureCache()->addImage("img/duelist.png");
+      sprite_duelist = Sprite::createWithTexture(texture);
+      sprite_duelist->setAnchorPoint(Vec2(0.5, 0));
+      sprite_duelist->setPosition(pos_duelist);
+      this->addChild(sprite_duelist, 0);
+      auto animation_duelist = AnimationCache::getInstance()->getAnimation("duelist-die");
+      auto action = Animate::create(animation_duelist);
+      sprite_duelist->runAction(Sequence::create(action, action->reverse(), nullptr));
+    }
 }
 
 void HelloWorld::menuCloseCallback(Ref* pSender)
