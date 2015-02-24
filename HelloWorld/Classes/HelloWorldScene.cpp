@@ -91,8 +91,8 @@ bool HelloWorld::init()
     // add the sprite as a child to this layer
     this->addChild(sprite, 0);
 
-    auto texture = Director::getInstance()->getTextureCache()->addImage("img/duelist.png");
-    auto sprite1 = Sprite::createWithTexture(texture);
+    auto texture1 = Director::getInstance()->getTextureCache()->addImage("img/duelist.png");
+    auto sprite1 = Sprite::createWithTexture(texture1);
     auto size1 = sprite1->getContentSize();
     CCLOG("sprite1 size: %f,%f", size1.width, size1.height);
 
@@ -100,34 +100,48 @@ bool HelloWorld::init()
     sprite1->setPosition(Vec2(visibleSize.width/2 + origin.x, origin.y));
     this->addChild(sprite1, 0);
 
-    auto animation = Animation::create();
+    auto animation1 = Animation::create();
     for( int i = 1; i < 9; i++)
     {
         char szName[100] = {0};
         sprintf(szName, "img/duelist-die%d.png", i);
-        animation->addSpriteFrameWithFile(szName);
+        animation1->addSpriteFrameWithFile(szName);
     }
 
-    animation->setDelayPerUnit(1.0f / 9.0f);
-    animation->setRestoreOriginalFrame(true);
-    AnimationCache::getInstance()->addAnimation (animation, "duelist-die");
+    animation1->setDelayPerUnit(1.0f / 9.0f);
+    animation1->setRestoreOriginalFrame(true);
+    AnimationCache::getInstance()->addAnimation (animation1, "duelist-die");
 
-    auto action = Animate::create(animation);
-    sprite1->runAction(RepeatForever::create(Sequence::create(action, action->reverse(), nullptr)));
+    auto action1 = Animate::create(animation1);
+    sprite1->runAction(RepeatForever::create(Sequence::create(action1, action1->reverse(), nullptr)));
 
     pos_duelist.set(visibleSize.width/2 + origin.x, origin.y + size1.height);
-
     sprite_duelist = nullptr;
 
-    //sprite_duelist = Sprite::createWithTexture(texture);
-    //CCLOG("Addr: %x,%x", sprite1, sprite_duelist);
-    //sprite_duelist->setAnchorPoint(Vec2(0.5, 0));
-    //sprite_duelist->setPosition(Vec2(visibleSize.width/2 + origin.x, origin.y + size1.height));
-    //animation_duelist = animation->clone();
-    //this->addChild(sprite_duelist, 0);
+    auto texture2 = Director::getInstance()->getTextureCache()->addImage("img/horseman-se.png");
+    auto sprite2 = Sprite::createWithTexture(texture2);
 
-    //auto action1 = Animate::create(animation_duelist);
-    //sprite_duelist->runAction(RepeatForever::create(Sequence::create(action1, action1->reverse(), nullptr)));
+    sprite2->setAnchorPoint(Vec2(0.5, 0));
+    sprite2->setPosition(Vec2(size1.width + origin.x, origin.y + size1.height));
+    this->addChild(sprite2, 0);
+
+   auto animation2 = Animation::create();
+    for( int i = 1; i < 13; i++)
+    {
+        char szName[100] = {0};
+        sprintf(szName, "img/horseman-se-attack%d.png", i);
+        animation2->addSpriteFrameWithFile(szName);
+    }
+
+    animation2->setDelayPerUnit(1.2f / 12.0f);
+    animation2->setRestoreOriginalFrame(true);
+    AnimationCache::getInstance()->addAnimation (animation2, "horseman-se-attack");
+
+    auto action2 = Animate::create(animation2);
+    auto walkLeft = MoveBy::create(1.2, Vec2(200,0));
+
+    auto seq = Spawn::create(action2, walkLeft, nullptr);
+    sprite2->runAction(seq);  
 
     return true;
 }
@@ -143,8 +157,15 @@ void HelloWorld::menuAnimationCallback(Ref* pSender)
       this->addChild(sprite_duelist, 0);
       auto animation_duelist = AnimationCache::getInstance()->getAnimation("duelist-die");
       auto action = Animate::create(animation_duelist);
-      sprite_duelist->runAction(Sequence::create(action, action->reverse(), nullptr));
+      sprite_duelist->runAction(Sequence::create(action, CallFunc::create(CC_CALLBACK_0(HelloWorld::AnimationFinished, this)), nullptr));
     }
+}
+
+void HelloWorld::AnimationFinished()
+{
+  //CCLOG("AnimationFinished");
+   this->removeChild(sprite_duelist, true);
+   sprite_duelist = nullptr;
 }
 
 void HelloWorld::menuCloseCallback(Ref* pSender)
