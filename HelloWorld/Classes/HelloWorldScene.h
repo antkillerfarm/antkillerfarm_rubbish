@@ -14,15 +14,18 @@ public:
     // a selector callback
     void menuCloseCallback(cocos2d::Ref* pSender);
     void menuAnimationCallback(cocos2d::Ref* pSender);
-    void AnimationFinished();
+    void duelistAnimationFinished();
+    void horsemanAnimationFinished();
     
     // implement the "static create()" method manually
     CREATE_FUNC(HelloWorld);
+    void myUpdate(float dt);
 
  private:
     cocos2d::Vec2 pos_duelist;
+    cocos2d::Vec2 pos_horseman;
     cocos2d::Sprite*  sprite_duelist;
-    //cocos2d::Animation* animation_duelist;
+    cocos2d::Sprite*  sprite_horseman;
 };
 
 #endif // __HELLOWORLD_SCENE_H__

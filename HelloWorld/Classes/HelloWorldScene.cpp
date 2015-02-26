@@ -18,6 +18,11 @@ Scene* HelloWorld::createScene()
     return scene;
 }
 
+void HelloWorld::myUpdate(float dt)  
+{  
+  //CCLOG("upadte----%f",dt);  
+}
+
 // on "init" you need to initialize your instance
 bool HelloWorld::init()
 {
@@ -115,15 +120,18 @@ bool HelloWorld::init()
     auto action1 = Animate::create(animation1);
     sprite1->runAction(RepeatForever::create(Sequence::create(action1, action1->reverse(), nullptr)));
 
-    pos_duelist.set(visibleSize.width/2 + origin.x, origin.y + size1.height);
+    pos_duelist.set(visibleSize.width / 2 + origin.x, origin.y + size1.height);
+    pos_horseman.set(visibleSize.width / 2 - 200 + origin.x, origin.y + size1.height);
     sprite_duelist = nullptr;
 
     auto texture2 = Director::getInstance()->getTextureCache()->addImage("img/horseman-se.png");
-    auto sprite2 = Sprite::createWithTexture(texture2);
+    sprite_horseman = Sprite::createWithTexture(texture2);
 
-    sprite2->setAnchorPoint(Vec2(0.5, 0));
-    sprite2->setPosition(Vec2(size1.width + origin.x, origin.y + size1.height));
-    this->addChild(sprite2, 0);
+    sprite_horseman->setAnchorPoint(Vec2(0.5, 0));
+    //sprite_horseman->setPosition(Vec2(size1.width + origin.x, origin.y + size1.height));
+    sprite_horseman->setVisible(false);
+    sprite_horseman->setScale(2.0);
+    this->addChild(sprite_horseman, 1);
 
    auto animation2 = Animation::create();
     for( int i = 1; i < 13; i++)
@@ -137,35 +145,44 @@ bool HelloWorld::init()
     animation2->setRestoreOriginalFrame(true);
     AnimationCache::getInstance()->addAnimation (animation2, "horseman-se-attack");
 
-    auto action2 = Animate::create(animation2);
-    auto walkLeft = MoveBy::create(1.2, Vec2(200,0));
+    auto texture = Director::getInstance()->getTextureCache()->addImage("img/duelist.png");
+    sprite_duelist = Sprite::createWithTexture(texture);
+    sprite_duelist->setAnchorPoint(Vec2(0.5, 0));
+    sprite_duelist->setPosition(pos_duelist);
+    sprite_duelist->setScale(2.0);
+    this->addChild(sprite_duelist, 0);
 
-    auto seq = Spawn::create(action2, walkLeft, nullptr);
-    sprite2->runAction(seq);  
+    //scheduleUpdate();
+    //schedule(schedule_selector(HelloWorld::myUpdate),1.0f);
 
     return true;
 }
 
 void HelloWorld::menuAnimationCallback(Ref* pSender)
 {
-  if (sprite_duelist == nullptr)
-    {
-      auto texture = Director::getInstance()->getTextureCache()->addImage("img/duelist.png");
-      sprite_duelist = Sprite::createWithTexture(texture);
-      sprite_duelist->setAnchorPoint(Vec2(0.5, 0));
-      sprite_duelist->setPosition(pos_duelist);
-      this->addChild(sprite_duelist, 0);
-      auto animation_duelist = AnimationCache::getInstance()->getAnimation("duelist-die");
-      auto action = Animate::create(animation_duelist);
-      sprite_duelist->runAction(Sequence::create(action, CallFunc::create(CC_CALLBACK_0(HelloWorld::AnimationFinished, this)), nullptr));
-    }
+  auto texture = Director::getInstance()->getTextureCache()->addImage("img/duelist.png");
+  sprite_duelist->setTexture(texture);
+
+  sprite_horseman->setPosition(pos_horseman);
+  sprite_horseman->setVisible(true);
+  auto animation_horseman = AnimationCache::getInstance()->getAnimation("horseman-se-attack");
+  auto action2 = Animate::create(animation_horseman);
+  auto walkLeft = MoveBy::create(1.2, Vec2(400,0));
+  auto seq = Spawn::create(action2, walkLeft, nullptr);
+  sprite_horseman->runAction(Sequence::create(seq, CallFunc::create(CC_CALLBACK_0(HelloWorld::horsemanAnimationFinished, this)), nullptr)); 
 }
 
-void HelloWorld::AnimationFinished()
+void HelloWorld::horsemanAnimationFinished()
 {
-  //CCLOG("AnimationFinished");
-   this->removeChild(sprite_duelist, true);
-   sprite_duelist = nullptr;
+  auto animation_duelist = AnimationCache::getInstance()->getAnimation("duelist-die");
+  auto action = Animate::create(animation_duelist);
+  sprite_duelist->runAction(Sequence::create(action, CallFunc::create(CC_CALLBACK_0(HelloWorld::duelistAnimationFinished, this)), nullptr));
+}
+
+void HelloWorld::duelistAnimationFinished()
+{
+  auto texture = Director::getInstance()->getTextureCache()->addImage("img/duelist-die8.png");
+  sprite_duelist->setTexture(texture);
 }
 
 void HelloWorld::menuCloseCallback(Ref* pSender)
