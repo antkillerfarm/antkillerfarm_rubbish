@@ -155,6 +155,17 @@ bool HelloWorld::init()
     //scheduleUpdate();
     //schedule(schedule_selector(HelloWorld::myUpdate),1.0f);
 
+    auto texture3 = Director::getInstance()->getTextureCache()->addImage("img/windmill_white.png");
+    auto sprite_windmill = Sprite::createWithTexture(texture3);
+    auto size_windmill = sprite1->getContentSize();
+    sprite_windmill->setAnchorPoint(Vec2(0.5078, 0.3594));
+    sprite_windmill->setPosition(Vec2(size_windmill.width * 2.5 + origin.x, visibleSize.height / 2 + origin.y));
+    auto rotateBy = RotateBy::create(2.0f, 360.0f);
+    sprite_windmill->runAction(RepeatForever::create(rotateBy));
+    //sprite_windmill->setOpacity(30);
+    sprite_windmill->setColor(Color3B::BLUE);
+    this->addChild(sprite_windmill, 0);
+
     return true;
 }
 
