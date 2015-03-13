@@ -87,7 +87,7 @@ b2Body* HelloWorld::createGround(int sx,int sy,int width,int height)
   groundBodyDef.position.Set(sx,sy);
   b2Body* groundBody = world->CreateBody(&groundBodyDef);
   b2EdgeShape groundBox;
-  //botttom
+  //bottom
   groundBox.Set(b2Vec2(0,0), b2Vec2(width / PTM_RATIO, 0));
   groundBody->CreateFixture(&groundBox,0);
   // top
@@ -111,7 +111,7 @@ void HelloWorld::update(float dt)
       if(b->GetUserData() != NULL)
 	{
 	  Sprite* mActor = (Sprite*)b->GetUserData();
-	  mActor->setPosition(ccp(b->GetPosition().x*PTM_RATIO, b->GetPosition().y*PTM_RATIO));
+	  mActor->setPosition(Point(b->GetPosition().x*PTM_RATIO, b->GetPosition().y*PTM_RATIO));
 	  mActor->setRotation(-1*CC_RADIANS_TO_DEGREES(b->GetAngle()));//note
 	}
     }
