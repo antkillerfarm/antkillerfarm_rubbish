@@ -1,6 +1,8 @@
 #include "HelloWorldScene.h"
+#include "audio/include/SimpleAudioEngine.h"
 #define PTM_RATIO 32
 USING_NS_CC;
+using namespace CocosDenshion;
 
 Scene* HelloWorld::createScene()
 {
@@ -27,10 +29,39 @@ bool HelloWorld::init()
         return false;
     }
     
+    auto audio = SimpleAudioEngine::getInstance(); 
+    // set the background music and continuously play it. 
+    audio->playBackgroundMusic("sanguo.mp3", true); 
+
+    Size visibleSize = Director::getInstance()->getVisibleSize();
+    Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
+    auto label1 = Label::createWithTTF("滚滚长江东逝水", "fonts/Fat_GBK.ttf", 24);
+
+    label1->setPosition(Vec2(origin.x + label1->getContentSize().width / 2,
+                            origin.y + visibleSize.height - label1->getContentSize().height));
+
+    auto walk_right = MoveBy::create(6, Vec2(visibleSize.width - label1->getContentSize().width, 0));
+    label1->runAction(walk_right);
+
+    // add the label as a child to this layer
+    this->addChild(label1, 1);
+
+    auto label2 = Label::createWithTTF("浪花淘尽英雄", "fonts/Fat_GBK.ttf", 24);
+
+    label2->setPosition(Vec2(origin.x + visibleSize.width - label2->getContentSize().width / 2,
+                            origin.y + visibleSize.height - 3 * label2->getContentSize().height));
+
+    auto walk_left = MoveBy::create(6, Vec2(-(visibleSize.width - label2->getContentSize().width), 0));
+    label2->runAction(walk_left);
+
+    // add the label as a child to this layer
+    this->addChild(label2, 1);
+
     //MYCode
     Size winSize = Director::getInstance()->getWinSize();
     b2Vec2 gravity;
-    gravity.Set(0.0f,-10.0f);
+    gravity.Set(5.0f,-10.0f);
     world = new b2World(gravity);
     //b2Body* groundBody = 
     createGround(0,0,winSize.width,winSize.height);
@@ -66,7 +97,6 @@ bool HelloWorld::init()
     return true;
 }
 
-
 void HelloWorld::menuCloseCallback(Ref* pSender)
 {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WP8) || (CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
@@ -101,6 +131,7 @@ b2Body* HelloWorld::createGround(int sx,int sy,int width,int height)
   groundBody->CreateFixture(&groundBox,0);
   return groundBody;
 }
+
 void HelloWorld::update(float dt)
 {
   int velocityIterations = 8;
@@ -116,6 +147,7 @@ void HelloWorld::update(float dt)
 	}
     }
 }
+
 void HelloWorld::createSprite(Point location, char image[])
 {
   Sprite* sprite = Sprite::create(image);
@@ -132,6 +164,7 @@ void HelloWorld::createSprite(Point location, char image[])
   fixtureDef.shape = &dynamicBox;
   fixtureDef.density = 1.0f;
   fixtureDef.friction = 0.3f;
+  fixtureDef.restitution = 0.8;
   body->CreateFixture(&fixtureDef);
 }
 
