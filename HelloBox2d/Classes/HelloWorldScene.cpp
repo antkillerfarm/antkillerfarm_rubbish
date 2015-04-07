@@ -58,6 +58,11 @@ bool HelloWorld::init()
     // add the label as a child to this layer
     this->addChild(label2, 1);
 
+    auto emitter = ParticleSun::create();
+    emitter->setPosition(Vec2(origin.x + visibleSize.width / 2,
+			      origin.y + visibleSize.height / 2));
+    this->addChild(emitter, 10);
+
     //MYCode
     Size winSize = Director::getInstance()->getWinSize();
     b2Vec2 gravity;
@@ -164,7 +169,7 @@ void HelloWorld::createSprite(Point location, char image[])
   fixtureDef.shape = &dynamicBox;
   fixtureDef.density = 1.0f;
   fixtureDef.friction = 0.3f;
-  fixtureDef.restitution = 0.8;
+  fixtureDef.restitution = 0.8f;
   body->CreateFixture(&fixtureDef);
 }
 
