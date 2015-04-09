@@ -1,6 +1,9 @@
 #include "HelloWorldScene.h"
 #include "audio/include/SimpleAudioEngine.h"
+
 #define PTM_RATIO 32
+#define EMIT_NUM 11
+
 USING_NS_CC;
 using namespace CocosDenshion;
 
@@ -42,7 +45,7 @@ bool HelloWorld::init()
                             origin.y + visibleSize.height - label1->getContentSize().height));
 
     auto walk_right = MoveBy::create(6, Vec2(visibleSize.width - label1->getContentSize().width, 0));
-    label1->runAction(walk_right);
+    label1->runAction(RepeatForever::create(Sequence::create(walk_right, walk_right->reverse(), nullptr)));
 
     // add the label as a child to this layer
     this->addChild(label1, 1);
@@ -53,12 +56,12 @@ bool HelloWorld::init()
                             origin.y + visibleSize.height - 3 * label2->getContentSize().height));
 
     auto walk_left = MoveBy::create(6, Vec2(-(visibleSize.width - label2->getContentSize().width), 0));
-    label2->runAction(walk_left);
+    label2->runAction(RepeatForever::create(Sequence::create(walk_left, walk_left->reverse(), nullptr)));
 
     // add the label as a child to this layer
     this->addChild(label2, 1);
 
-    auto emitter = ParticleSun::create();
+    emitter = ParticleSun::create();
     emitter->setPosition(Vec2(origin.x + visibleSize.width / 2,
 			      origin.y + visibleSize.height / 2));
     this->addChild(emitter, 10);
@@ -96,6 +99,9 @@ bool HelloWorld::init()
  
     // Add listener
     _eventDispatcher->addEventListenerWithSceneGraphPriority(listener1, this);
+
+	update_cnt = 0;
+	schedule( schedule_selector(HelloWorld::myupdate), 6.0);
 
     scheduleUpdate();
     
@@ -180,3 +186,41 @@ void HelloWorld::createSprite(Point location, char image[])
   createSprite(location,"football.png");
 }
 */
+
+void HelloWorld::myupdate(float dt)
+{
+	update_cnt++;
+	update_cnt = update_cnt % EMIT_NUM;
+    this->removeChild(emitter);
+	switch (update_cnt)
+	{
+	case 0: emitter = ParticleSun::create();
+			break;
+	case 1: emitter = ParticleFlower::create();
+			break;
+	case 2: emitter = ParticleMeteor::create();
+			break;
+	case 3: emitter = ParticleExplosion::create();
+			break;
+	case 4: emitter = ParticleSmoke::create();
+			break;
+	case 5: emitter = ParticleSnow::create();
+			break;
+	case 6: emitter = ParticleRain::create();
+			break;
+	case 7: emitter = ParticleSpiral::create();
+			break;
+	case 8: emitter = ParticleFire::create();
+			break;
+	case 9: emitter = ParticleFireworks::create();
+			break;
+	case 10: emitter = ParticleGalaxy::create();
+			break;
+	}
+	Size visibleSize = Director::getInstance()->getVisibleSize();
+    Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
+	emitter->setPosition(Vec2(origin.x + visibleSize.width / 2,
+			      origin.y + visibleSize.height / 2));
+    this->addChild(emitter, 10);
+}

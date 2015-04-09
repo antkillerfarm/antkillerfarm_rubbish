@@ -19,13 +19,16 @@ public:
     b2Body* createGround(int sx,int sy,int width,int height);
     void createSprite(cocos2d::Point location,char image[]);
     void update(float dt);
+	void myupdate(float dt);
     //virtual void onTouchEnded(cocos2d::Touch* touch, cocos2d::Event* unused_event);
 
     // implement the "static create()" method manually
     CREATE_FUNC(HelloWorld);
 
 private:
-    b2World*world;
+    b2World *world;
+	cocos2d::ParticleSystemQuad *emitter;
+	int update_cnt;
 };
 
 #endif // __HELLOWORLD_SCENE_H__
