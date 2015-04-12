@@ -2,7 +2,7 @@
 #define QSLIDERLINEEDITOR_H
 
 #include <QWidget>
-#include "QtGui"
+//#include <QtGui>
 #include "qpropertylineeditor.h"
 namespace Ui {
 class QSliderLineEditor;

@@ -4,6 +4,7 @@
 #define PTM_RATIO 32
 #define EMIT_NUM 11
 
+
 USING_NS_CC;
 using namespace CocosDenshion;
 
@@ -189,38 +190,38 @@ void HelloWorld::createSprite(Point location, char image[])
 
 void HelloWorld::myupdate(float dt)
 {
-	update_cnt++;
-	update_cnt = update_cnt % EMIT_NUM;
-    this->removeChild(emitter);
-	switch (update_cnt)
-	{
-	case 0: emitter = ParticleSun::create();
-			break;
-	case 1: emitter = ParticleFlower::create();
-			break;
-	case 2: emitter = ParticleMeteor::create();
-			break;
-	case 3: emitter = ParticleExplosion::create();
-			break;
-	case 4: emitter = ParticleSmoke::create();
-			break;
-	case 5: emitter = ParticleSnow::create();
-			break;
-	case 6: emitter = ParticleRain::create();
-			break;
-	case 7: emitter = ParticleSpiral::create();
-			break;
-	case 8: emitter = ParticleFire::create();
-			break;
-	case 9: emitter = ParticleFireworks::create();
-			break;
-	case 10: emitter = ParticleGalaxy::create();
-			break;
-	}
-	Size visibleSize = Director::getInstance()->getVisibleSize();
-    Vec2 origin = Director::getInstance()->getVisibleOrigin();
+  update_cnt++;
+  update_cnt = update_cnt % EMIT_NUM;
+  this->removeChild(emitter);
+  switch (update_cnt)
+    {
+    case 0: emitter = ParticleSun::create();
+      break;
+    case 1: emitter = ParticleFlower::create();
+      break;
+    case 2: emitter = ParticleMeteor::create();
+      break;
+    case 3: emitter = ParticleExplosion::create();
+      break;
+    case 4: emitter = ParticleSmoke::create();
+      break;
+    case 5: emitter = ParticleSnow::create();
+      break;
+    case 6: emitter = ParticleRain::create();
+      break;
+    case 7: emitter = ParticleSpiral::create();
+      break;
+    case 8: emitter = ParticleFire::create();
+      break;
+    case 9: emitter = ParticleFireworks::create();
+      break;
+    case 10: emitter = ParticleGalaxy::create();
+      break;
+    }
+  Size visibleSize = Director::getInstance()->getVisibleSize();
+  Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-	emitter->setPosition(Vec2(origin.x + visibleSize.width / 2,
-			      origin.y + visibleSize.height / 2));
-    this->addChild(emitter, 10);
+  emitter->setPosition(Vec2(origin.x + visibleSize.width / 2,
+			    origin.y + visibleSize.height / 2));
+  this->addChild(emitter, 10);
 }

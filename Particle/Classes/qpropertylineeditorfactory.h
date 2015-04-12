@@ -1,9 +1,10 @@
 #ifndef QPROPERTYLINEEDITORFACTORY_H
 #define QPROPERTYLINEEDITORFACTORY_H
 
-#include <QtCore>
 #include "qpropertylineeditor.h"
 #include "qpropertylineeditorgroup.h"
+#include <QtCore>
+
 class QPropertyLineEditorFactory :public QObject
 {
     Q_OBJECT

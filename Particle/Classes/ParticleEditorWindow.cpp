@@ -1,6 +1,11 @@
-#include "particleeditorwindow.h"
-#include "ui_particleeditorwindow.h"
+#include <QObject>
+#include <QToolBar>
+#include <QFileDialog>
+#include <QColorDialog>
+#include <QMessageBox>
+#include "ui_ParticleEditorWindow.h"
 #include "ParticleProperties.h"
+#include "ParticleEditorWindow.h"
 #include "qpropertylineeditorfactory.h"
 #include "qpropertylineeditorgroup.h"
 #include "qsliderlineeditor.h"
@@ -9,11 +14,6 @@
 #include "dialog_savetexture.h"
 #include "dialog_about.h"
 #include "flowlayout.h"
-#include <QObject>
-#include <QToolBar>
-#include <QFileDialog>
-#include <QColorDialog>
-#include <QMessageBox>
 #include "MainScene.h"
 
 
@@ -277,7 +277,7 @@ int ParticleEditorWindow::read(QString filename , QString & currentPngFile)
 		// if it fails, try to get it from the base64-gzipped data	
 		int decodeLen = base64Decode((unsigned char*)textureData.c_str(), (unsigned int)dataLen, &buffer);
 		CCAssert( buffer != NULL, "CCParticleSystem: error decoding textureImageData");
-		int deflatedLen = ZipUtils::ccInflateMemory(buffer, decodeLen, &deflated);
+		int deflatedLen = ZipUtils::inflateMemory(buffer, decodeLen, &deflated);
 		CCAssert( deflated != NULL, "CCParticleSystem: error ungzipping textureImageData");
 
 		QImage image = QImage::fromData(deflated,deflatedLen );
@@ -313,7 +313,7 @@ int ParticleEditorWindow::read(QString filename , QString & currentPngFile)
 
 
 
-ccColor4F ccc4f( float r ,float g, float b , float a )
+Color4F ccc4f(float r, float g, float b, float a)
 {
     Color4F color4f(r,g,b,a);
     return color4f;
@@ -339,7 +339,7 @@ ValueMap ParticleEditorWindow::getDict()
 		}
     }
     //texture file name
-    CCString * text_filename = new CCString();
+    //CCString * text_filename = new CCString();
 	dict[pnameof(PP::textureFileName)] = Value("default.png");
 
     //blend func.
@@ -358,25 +358,25 @@ void ParticleEditorWindow::propertyValueChanged(IPropertyEditor *editor, double 
     //CCParticleSystem_Ext * particleExt = MyScene::curParticle();
 	//if ( particleExt == 0 ) return;
 	my_valueChanged();
-    CCParticleSystem * particle = MainScene::getInstance()->getPs();
+    ParticleSystem * particle = MainScene::getInstance()->getPs();
 
     switch(editor->id)
     {
     case PP::sourcePositionx:
-        particle->setSourcePosition(ccp( value , particle->getSourcePosition().y));
+        particle->setSourcePosition(Vec2( value , particle->getSourcePosition().y));
         if (particle->getDuration()!=-1.0f)
             break;
         return;
     case PP::sourcePositiony:
-        particle->setSourcePosition(ccp( particle->getSourcePosition().x,  value));
+        particle->setSourcePosition(Vec2( particle->getSourcePosition().x,  value));
         if (particle->getDuration()!=-1.0f)
             break;
         return;
     case PP::sourcePositionVariancex:
-        particle->setPosVar(ccp(value ,particle->getPosVar().y));
+        particle->setPosVar(Vec2(value ,particle->getPosVar().y));
         break;
     case PP::sourcePositionVariancey:
-        particle->setPosVar(ccp( particle->getPosVar().x , value));
+        particle->setPosVar(Vec2( particle->getPosVar().x , value));
         break;
     case PP::speed:
         particle->setSpeed(value);
@@ -385,10 +385,10 @@ void ParticleEditorWindow::propertyValueChanged(IPropertyEditor *editor, double 
         particle->setSpeedVar(value);
         break;
     case PP::gravityx:
-        particle->setGravity( ccp ( value , particle->getGravity().y) ) ; 
+        particle->setGravity(Vec2( value , particle->getGravity().y) ) ; 
         break;
     case PP::gravityy:
-        particle->setGravity( ccp(  particle->getGravity().x , value) );
+        particle->setGravity(Vec2(  particle->getGravity().x , value) );
         break;
     case PP::radialAcceleration:
         particle->setRadialAccel(value);

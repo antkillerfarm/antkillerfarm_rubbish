@@ -1,13 +1,12 @@
 #ifndef PARTICLEEDITORWINDOW_H
 #define PARTICLEEDITORWINDOW_H
 
+#include "cocos2d.h"
 #include <QMainWindow>
 #include <QLabel>
 #include <QComboBox>
 #include <QMenu>
 #include <QFrame>
-#include "cocos2d.h"
-
 
 #define WINDOW_NAME "Cocos2d Particle Builder "
 

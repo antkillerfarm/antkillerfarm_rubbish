@@ -1,7 +1,7 @@
 #ifndef QPROPERTYLINEEDITORGROUP_H
 #define QPROPERTYLINEEDITORGROUP_H
 
-#include <QtGui>
+//#include <QtGui>
 #include "qpropertylineeditor.h"
 #include <QtCore>
 #include "flowlayout.h"

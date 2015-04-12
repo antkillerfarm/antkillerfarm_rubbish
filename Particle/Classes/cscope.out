@@ -1,4 +1,4 @@
-cscope 15 $HOME/my/antkillerfarm_rubbish/Particle/Classes               0000403395
+cscope 15 $HOME/my/antkillerfarm_rubbish/Particle/Classes               0000403262
 	@AppDelegate.cpp
 
 1 
@@ -1487,7 +1487,7 @@ _wšdow
 	$£tBgCÞÜ
 (
 CÞÜ4B
- &
+ 
 cÞÜ
 )
 
@@ -2335,7 +2335,7 @@ QWidg‘
 	`£tBgCÞÜ
 (
 CÞÜ4B
- &
+ 
 cÞÜ
 );
 
@@ -3668,9 +3668,11 @@ Textu»2D
  * 
 ‹x
  = 
-Textu»Cache
+DœeùÜ
 ::
 	`g‘In¡ªû
+()->
+	`g‘Textu»Cache
 ()->
 	`addImage
 (
@@ -3922,7 +3924,7 @@ _ÿnMoveBg
 ;
 
 117 
-CCP¬tiþeSy¡em
+P¬tiþeSy¡em
  * 
 ·¹iþe
  = 
@@ -3988,7 +3990,7 @@ Ev’t
 * )
 
 138 
-CCPošt
+Pošt
  
 p
  = 
@@ -3998,7 +4000,7 @@ touch
 ();
 
 139 
-CCPošt
+Pošt
  
 ¶a¡
  = 
@@ -4008,7 +4010,7 @@ touch
 ();
 
 140 
-CCPošt
+Pošt
  
 p_veùÜ
  = 
@@ -4036,7 +4038,7 @@ p_veùÜ
 );
 
 146 
-CCP¬tiþeSy¡em
+P¬tiþeSy¡em
  * 
 ·¹iþe
  = 
@@ -4068,12 +4070,10 @@ p
 ->
 	`£tPos™iÚ
 (
-	`cýAdd
-(
 p_veùÜ
- ,…¬tiþe->
+ +…¬tiþe->
 	`g‘Pos™iÚ
-()));
+());
 
 163 
 	}
@@ -4330,68 +4330,68 @@ boÞ
 	@ParticleEditorWindow.cpp
 
 1 
-	~"·¹iþ“d™Üwšdow.h
-"
-
-2 
-	~"ui_·¹iþ“d™Üwšdow.h
-"
-
-3 
-	~"P¬tiþePrÝ”t›s.h
-"
-
-4 
-	~"q´Ý”tylš“d™ÜçùÜy.h
-"
-
-5 
-	~"q´Ý”tylš“d™Ügroup.h
-"
-
-6 
-	~"q¦id”lš“d™Ü.h
-"
-
-7 
-	~"’t™ymªag”.h
-"
-
-8 
-	~"zlib.h
-"
-
-9 
-	~"dŸlog_§v‘extu».h
-"
-
-10 
-	~"dŸlog_about.h
-"
-
-11 
-	~"æowÏyout.h
-"
-
-12 
 	~<QObjeù
 >
 
-13 
+2 
 	~<QToÞB¬
 >
 
-14 
+3 
 	~<QFžeDŸlog
 >
 
-15 
+4 
 	~<QCÞÜDŸlog
 >
 
-16 
+5 
 	~<QMes§geBox
 >
+
+6 
+	~"ui_P¬tiþeEd™ÜWšdow.h
+"
+
+7 
+	~"P¬tiþePrÝ”t›s.h
+"
+
+8 
+	~"P¬tiþeEd™ÜWšdow.h
+"
+
+9 
+	~"q´Ý”tylš“d™ÜçùÜy.h
+"
+
+10 
+	~"q´Ý”tylš“d™Ügroup.h
+"
+
+11 
+	~"q¦id”lš“d™Ü.h
+"
+
+12 
+	~"’t™ymªag”.h
+"
+
+13 
+	~"zlib.h
+"
+
+14 
+	~"dŸlog_§v‘extu».h
+"
+
+15 
+	~"dŸlog_about.h
+"
+
+16 
+	~"æowÏyout.h
+"
 
 17 
 	~"MašSûÃ.h
@@ -6140,7 +6140,7 @@ deæ©edL’
  = 
 ZUtžs
 ::
-	`ccInæ©eMemÜy
+	`Inæ©eMemÜy
 (
 bufãr
 , 
@@ -6342,18 +6342,18 @@ isEmbed
 }
 
 316 
-ccCÞÜ4F
+CÞÜ4F
  
 	$ccc4f
-Ð
+(
 r
- ,
+, 
 g
 , 
 b
- , 
+, 
 a
- )
+)
 
 318 
 CÞÜ4F
@@ -6457,16 +6457,6 @@ diù
 v®ue
 ;
 
-342 
-CCSŒšg
- * 
-‹xt_fž’ame
- = 
-Ãw
- 
-	`CCSŒšg
-();
-
 343 
 diù
 [
@@ -6560,7 +6550,7 @@ isR—dšg
 ();
 
 361 
-CCP¬tiþeSy¡em
+P¬tiþeSy¡em
  * 
 ·¹iþe
  = 
@@ -6588,7 +6578,7 @@ sourûPos™iÚx
 ->
 	`£tSourûPos™iÚ
 (
-	`cý
+	`Vec2
 Ð
 v®ue
  ,…¬tiþe->
@@ -6614,7 +6604,7 @@ sourûPos™iÚy
 ->
 	`£tSourûPos™iÚ
 (
-	`cý
+	`Vec2
 Ð·¹iþe->
 	`g‘SourûPos™iÚ
 ().
@@ -6640,7 +6630,7 @@ sourûPos™iÚV¬Ÿnûx
 ->
 	`£tPosV¬
 (
-	`cý
+	`Vec2
 (
 v®ue
  ,·¹iþe->
@@ -6660,7 +6650,7 @@ sourûPos™iÚV¬Ÿnûy
 ->
 	`£tPosV¬
 (
-	`cý
+	`Vec2
 Ð·¹iþe->
 	`g‘PosV¬
 ().
@@ -6707,9 +6697,9 @@ g¿v™yx
 ·¹iþe
 ->
 	`£tG¿v™y
+(
+	`Vec2
 Ð
-	`cý
- ( 
 v®ue
  ,…¬tiþe->
 	`g‘G¿v™y
@@ -6727,8 +6717,8 @@ g¿v™yy
 ·¹iþe
 ->
 	`£tG¿v™y
-Ð
-	`cý
+(
+	`Vec2
 Ð·¹iþe->
 	`g‘G¿v™y
 ().
@@ -10252,36 +10242,36 @@ PARTICLEEDITORWINDOW_H
 	)
 
 4 
-	~<QMašWšdow
->
-
-5 
-	~<QLab–
->
-
-6 
-	~<QComboBox
->
-
-7 
-	~<QM’u
->
-
-8 
-	~<QF¿me
->
-
-9 
 	~"cocos2d.h
 "
 
-12 
+5 
+	~<QMašWšdow
+>
+
+6 
+	~<QLab–
+>
+
+7 
+	~<QComboBox
+>
+
+8 
+	~<QM’u
+>
+
+9 
+	~<QF¿me
+>
+
+11 
 	#WINDOW_NAME
  "Cocos2d P¬tiþBužd” "
 
 	)
 
-14 
+13 
 usšg
  
 Çme¥aû
@@ -10289,55 +10279,55 @@ usšg
 	gcocos2d
 ;
 
-15 
+14 
 Çme¥aû
  
 	gUi
  {
 
-16 
+15 
 þass
  
 	gP¬tiþeEd™ÜWšdow
 ;
 
-18 
+17 
 þass
  
 	gIPrÝ”tyEd™Ü
 ;
 
-19 
+18 
 þass
  
 	gQPrÝ”tyLšeEd™ÜGroup
 ;
 
-20 
+19 
 þass
  
 	gQPrÝ”tyLšeEd™Ü
 ;
 
-21 
+20 
 þass
  
 	gQPrÝ”tyLšeEd™ÜFaùÜy
 ;
 
-22 
+21 
 þass
  
 	gQPixm­
 ;
 
-23 
+22 
 þass
  
 	gQPushBu‰Ú
 ;
 
-24 þas 
+23 þas 
 	cP¬tiþeEd™ÜWšdow
  : 
 public
@@ -10345,31 +10335,31 @@ public
 QMašWšdow
 
 
-26 
+25 
 Q_OBJECT
 
 
-27 
+26 
 ´iv©e
 :
 
-28 
+27 
 QWidg‘
  *
 _glWidg‘
 ;
 
-29 
+28 
 QPixm­
  
 	m_²g
 ;
 
-30 
+29 
 	mpublic
 :
 
-31 
+30 
 £tGLV›w
 (
 QWidg‘
@@ -10377,25 +10367,25 @@ QWidg‘
 glWidg‘
 );
 
-32 
+31 
 ex¶ic™
  
 P¬tiþeEd™ÜWšdow
 ();
 
-33 ~
+32 ~
 P¬tiþeEd™ÜWšdow
 ();
 
-34 
+33 
 ü—‹AùiÚs
 ();
 
-35 
+34 
 ü—‹TooB¬
 ();
 
-37 
+36 
 »ad
 (
 QSŒšg
@@ -10405,7 +10395,7 @@ fž’ame
 cu¼’tPngFže
 );
 
-38 
+37 
 wr™e
 (
 QSŒšg
@@ -10419,7 +10409,7 @@ boÞ
 emebedPng
 );
 
-40 
+39 
 IPrÝ”tyEd™Ü
  *
 AddHSlid”PrÝ”ty
@@ -10431,11 +10421,11 @@ group
 id
 );
 
-41 
+40 
 upd©eReûÁFžeAùiÚs
 ();
 
-42 
+41 
 £tCu¼’tFže
 (cÚ¡ 
 QSŒšg
@@ -10443,7 +10433,7 @@ QSŒšg
 fžeName
 );
 
-43 
+42 
 »ad¶i¡
 (
 QSŒšg
@@ -10451,17 +10441,17 @@ QSŒšg
 fžeP©h
 );
 
-44 
+43 
 Ý’Exam¶e
 ( const * );
 
-46 
+45 
 public
  
 	m¦Ùs
 :
 
-47 
+46 
 ´Ý”tyV®ueChªged
 (
 IPrÝ”tyEd™Ü
@@ -10471,53 +10461,53 @@ ed™Ü
 v®ue
 );
 
-48 
+47 
 aù_Ý’R’ùFžeM’u
 ();
 
-49 
+48 
 aù_Ý’
 ();
 
-50 
+49 
 aù_§ve
 ();
 
-51 
+50 
 aù_Ãw
 ();
 
-52 
+51 
 aù_§v—s
 ();
 
-53 
+52 
 aù_¶ay
 ();
 
-54 
+53 
 aù_Ý’_exam¶eM’u
 ();
 
-55 
+54 
 aù_Ý’Exam¶e
 ();
 
-56 
+55 
 aù_about
 ();
 
-57 
+56 
 aù_þ—rReûÁ
 ();
 
-58 
+57 
 ´iv©e
  
 	m¦Ùs
 :
 
-59 
+58 
 Ú_Çme_eim™‹rTy³_cu¼’tIndexChªged
 (cÚ¡ 
 QSŒšg
@@ -10525,7 +10515,7 @@ QSŒšg
 v®
 );
 
-61 
+60 
 Ú_Çme_bËnd¤c_cu¼’tIndexChªged
 (cÚ¡ 
 QSŒšg
@@ -10533,7 +10523,7 @@ QSŒšg
 ¬g1
 );
 
-63 
+62 
 Ú_Çme_bËndd¡_cu¼’tIndexChªged
 (cÚ¡ 
 QSŒšg
@@ -10541,53 +10531,53 @@ QSŒšg
 ¬g1
 );
 
-66 
+65 
 Ú_Çme_bËndNÜm®_þicked
 ();
 
-68 
+67 
 Ú_Çme_bËndAdd™ive_þicked
 ();
 
-70 
+69 
 Ú_pushBu‰Ú_þicked
 ();
 
-72 
+71 
 Ú_bŠ_¡¬tCÞÜ_þicked
 ();
 
-73 
+72 
 Ú_bŠ_’dCÞÜ_þicked
 ();
 
-74 
+73 
 Ú_chªgeBu‰Ú_þicked
 ();
 
-75 
+74 
 Ú_»moveBu‰Ú_þicked
 ();
 
-76 
+75 
 Ú_box_move_¡©eChªged
 (
 ¡©e
 );
 
-77 
+76 
 Ú_bŠ_bgCÞÜ_þicked
 ();
 
-80 
+79 
 Ý’ReûÁFže
 ();
 
-82 
+81 
 	m´Ùeùed
 :
 
-83 
+82 
 þo£Ev’t
 (
 QClo£Ev’t
@@ -10595,7 +10585,7 @@ QClo£Ev’t
 ev’t
 ) ;
 
-84 
+83 
 sÿËImage
 (
 QImage
@@ -10607,101 +10597,101 @@ x
 y
  );
 
-85 
+84 
 	m´iv©e
 :
 
-87 
+86 
 QLab–
  * 
 m_Ïb–Textu»
 ;
 
-88 
+87 
 QComboBox
  *
 	mm_eim™‹rTy³
 ;
 
-89 
+88 
 QComboBox
  * 
 	mm_bËndSrc
 ;
 
-90 
+89 
 QComboBox
  *
 	mm_bËndD¡
 ;
 
-91 
+90 
 QAùiÚ
  *
 	mmAù_Ãw
 ;
 
-92 
+91 
 QAùiÚ
  *
 	mmAù_O³n
 ;
 
-93 
+92 
 QM’u
  * 
 	mm_Ý’M’u
 ;
 
-94 
+93 
 QAùiÚ
  *
 	mmAù_Save
 ;
 
-95 
+94 
 QAùiÚ
  * 
 	mmAù_Sav—s
 ;
 
-96 
+95 
 QAùiÚ
  * 
 	mmAù_PÏy
 ;
 
-97 
+96 
 QAùiÚ
  * 
 	mmAù_exam¶e
 ;
 
-98 
+97 
 QM’u
  * 
 	mm_m’u_exam¶e
 ;
 
-99 
+98 
 QAùiÚ
  * 
 	mm_AùAbout
 ;
 
-100 
+99 
 QPrÝ”tyLšeEd™ÜGroup
  * 
 	mm_em™‹rTy³_g¿v™y
 ;
 
-101 
+100 
 QPrÝ”tyLšeEd™ÜGroup
  * 
 	mm_em™‹rTy³_¿dŸl
 ;
 
-102 
+101 
 	mUi
 ::
 P¬tiþeEd™ÜWšdow
@@ -10709,65 +10699,65 @@ P¬tiþeEd™ÜWšdow
 ui
 ;
 
-105 
+104 
 QSŒšg
  
 	mm_cu¼’tP©h
 ;
 
-106 
+105 
 boÞ
  
 	mm_hasLšked2Fže
 ;
 
-107 
+106 
 boÞ
  
 	mm_hasSaved
 ;
 
-108 
+107 
 boÞ
  
 	mm_isEmbed
 ;
 
-109 
+108 
 QSŒšg
  
 	mm_²gfž’ame
 ;
 
-110 
+109 
 QSŒšg
  
 	mm_²gP©h
 ;
 
-111 
+110 
 boÞ
  
 	mm_isExam¶e
 ;
 
-112 
+111 
 	$my_v®ueChªged
 ()
 
-114 
+113 
 m_hasSaved
  = 
 çl£
 ;
 
-115 ià(!
+114 ià(!
 m_cu¼’tP©h
 .
 	`isNuÎ
 ())
 
-116 
+115 
 this
 ->
 	`£tWšdowT™Ë
@@ -10779,27 +10769,27 @@ WINDOW_NAME
 m_cu¼’tP©h
  +" * " );
 
-118 
+117 
 	$my_Ãw
 ()
 
-120 
+119 
 m_hasLšked2Fže
  = 
 çl£
 ;
 
-121 
+120 
 m_hasSaved
  = 
 Œue
 ;
 
-122 
+121 
 	}
 }
 
-123 
+122 
 	$my_Ý’Png
 (
 QSŒšg
@@ -10809,7 +10799,7 @@ QSŒšg
 ²gName
 )
 
-125 
+124 
 this
 -> 
 m_²gP©h
@@ -10817,7 +10807,7 @@ m_²gP©h
 ²gP©h
 ;
 
-126 
+125 
 this
 ->
 m_²gfž’ame
@@ -10825,53 +10815,53 @@ m_²gfž’ame
 ²gName
 ;
 
-127 
+126 
 	}
 }
 
-128 
+127 
 QSŒšg
  
 	$g‘CurPngName
 ()
 
-130  
+129  
 m_²gfž’ame
 ;
 
-131 
+130 
 	}
 }
 
-133 
+132 
 QSŒšg
  
 	$g‘CurPngP©h
 ()
 
-135  
+134  
 m_²gP©h
 ;
 
-136 
+135 
 	}
 }
 
-138 
+137 
 	$my_Ý’Exam¶e
 ()
 
-140 
+139 
 m_isExam¶e
  = 
 Œue
 ;
 
-141 
+140 
 	}
 }
 
-143 
+142 
 	$my_Ý’
 (
 QSŒšg
@@ -10885,7 +10875,7 @@ isEmbed
 ²gName
 )
 
-147 
+146 
 	`my_§ve
 (
 ·th
@@ -10895,67 +10885,67 @@ isEmbed
 ²gName
 );
 
-148 
+147 
 	}
 }
 
-150 
+149 
 boÞ
  
 	$isExam¶e
 ()
 
-152  
+151  
 m_isExam¶e
 ;
 
-153 
+152 
 	}
 }
 
-155 
+154 
 boÞ
  
 	$isSaved
 ()
 
-157  
+156  
 m_hasSaved
 ;
 
-158 
+157 
 	}
 }
 
-159 
+158 
 QSŒšg
  
 	$g‘Cu¼’tP©h
 ()
 
-161  
+160  
 m_cu¼’tP©h
 ;
 
-162 
+161 
 	}
 }
 
-164 
+163 
 boÞ
  
 	$hasLšked2Fže
 ()
 
-166  
+165  
 m_hasLšked2Fže
 ;
 
-167 
+166 
 	}
 }
 
-169 
+168 
 	$my_§ve
 (
 QSŒšg
@@ -10969,7 +10959,7 @@ isEmbed
 ²gName
 )
 
-171 
+170 
 this
 ->
 	`£tWšdowT™Ë
@@ -10981,7 +10971,7 @@ WINDOW_NAME
 ·th
  );
 
-172 
+171 
 this
 ->
 m_cu¼’tP©h
@@ -10989,7 +10979,7 @@ m_cu¼’tP©h
 ·th
 ;
 
-173 
+172 
 this
 ->
 m_isEmbed
@@ -10997,7 +10987,7 @@ m_isEmbed
 isEmbed
 ;
 
-174 
+173 
 this
 ->
 m_²gfž’ame
@@ -11005,7 +10995,7 @@ m_²gfž’ame
 ²gName
 ;
 
-175 
+174 
 this
 ->
 m_hasSaved
@@ -11013,29 +11003,29 @@ m_hasSaved
 Œue
 ;
 
-176 
+175 
 m_hasLšked2Fže
  = 
 Œue
 ;
 
-177 
+176 
 m_isExam¶e
  = 
 çl£
 ;
 
-178 
+177 
 	}
 }
 
-184 
+183 
 V®ueM­
  
 g‘Diù
 ();
 
-186 
+185 
 QPrÝ”tyLšeEd™Ü
  * 
 AddPrÝ”ty
@@ -11047,7 +11037,7 @@ group
 id
 );
 
-187 
+186 
 »ÃwCÞÜBu‰Ú
 (
 QPushBu‰Ú
@@ -11061,23 +11051,23 @@ g
 b
 );
 
-191 
+190 
 	g´iv©e
 :
 
-192 
+191 
 QPrÝ”tyLšeEd™ÜFaùÜy
  * 
 m_FaùÜy
 ;
 
-193 
+192 
 	#MaxReûÁFžes
  10
 
 	)
 
-194 
+193 
 QAùiÚ
  *
 	g»ûÁFžeAùs
@@ -14675,10 +14665,6 @@ DIALOG_SAVETEXTURE_H
 	~<QDŸlog
 >
 
-5 
-	~"QtGui
-"
-
 6 
 Çme¥aû
  
@@ -16273,14 +16259,6 @@ QPROPERTYLINEEDITOR_H
 
 	)
 
-4 
-	~<QWidg‘
->
-
-5 
-	~<QtGui
->
-
 7 
 Çme¥aû
  
@@ -16614,18 +16592,18 @@ QPROPERTYLINEEDITORFACTORY_H
 	)
 
 4 
-	~<QtCÜe
->
-
-5 
 	~"q´Ý”tylš“d™Ü.h
 "
 
-6 
+5 
 	~"q´Ý”tylš“d™Ügroup.h
 "
 
-7 þas 
+6 
+	~<QtCÜe
+>
+
+8 þas 
 	cQPrÝ”tyLšeEd™ÜFaùÜy
  :
 public
@@ -16633,15 +16611,15 @@ public
 QObjeù
 
 
-9 
+10 
 Q_OBJECT
 
 
-10 
+11 
 public
 :
 
-11 
+12 
 QLi¡
  <
 QPrÝ”tyLšeEd™ÜGroup
@@ -16649,21 +16627,21 @@ QPrÝ”tyLšeEd™ÜGroup
 m_groups
 ;
 
-12 
+13 
 QPrÝ”tyLšeEd™ÜFaùÜy
 ();
 
-13 ~
+14 ~
 	$QPrÝ”tyLšeEd™ÜFaùÜy
 ()
 
-15 
+16 
 d–‘e
  
 m_groups
 ;
 
-19 
+20 
 	`add
 (
 QPrÝ”tyLšeEd™ÜGroup
@@ -16671,7 +16649,7 @@ QPrÝ”tyLšeEd™ÜGroup
 group
 );
 
-21 
+22 
 IPrÝ”tyEd™Ü
  * 
 	`PrÝ”ty
@@ -16679,11 +16657,11 @@ IPrÝ”tyEd™Ü
 id
 );
 
-23 
+24 
 sigÇls
 :
 
-24 
+25 
 	`´Ý”tyV®ueChªged
 (
 IPrÝ”tyEd™Ü
@@ -16693,13 +16671,13 @@ ed™Ü
 v®ue
 );
 
-26 
+27 
 public
  
 ¦Ùs
 :
 
-27 
+28 
 	$chªgeV®ue
 (
 IPrÝ”tyEd™Ü
@@ -16709,7 +16687,7 @@ ed™Ü
 v®ue
 )
 
-29 
+30 
 em™
  
 	`´Ý”tyV®ueChªged
@@ -16719,7 +16697,7 @@ ed™Ü
 v®ue
 );
 
-30 
+31 
 	}
 }
 
@@ -17012,10 +16990,6 @@ QPROPERTYLINEEDITORGROUP_H
 
 
 	)
-
-4 
-	~<QtGui
->
 
 5 
 	~"q´Ý”tylš“d™Ü.h
@@ -17472,10 +17446,6 @@ QSLIDERLINEEDITOR_H
 4 
 	~<QWidg‘
 >
-
-5 
-	~"QtGui
-"
 
 6 
 	~"q´Ý”tylš“d™Ü.h

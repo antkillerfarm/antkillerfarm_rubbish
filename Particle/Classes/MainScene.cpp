@@ -53,7 +53,7 @@ void MainScene::resetPs( ValueMap & dict , double maxparticles )
 void MainScene::changeBg( std::string & filePath )
 {
 	_bg->setVisible(true);
-	Texture2D * tex = TextureCache::getInstance()->addImage(filePath);
+	Texture2D * tex = Director::getInstance()->getTextureCache()->addImage(filePath);
 	_bg->setTexture(tex);
 	Size size = tex->getContentSize();
 	_bg->setTextureRect(Rect(0,0,size.width,size.height) );
@@ -114,7 +114,7 @@ bool MainScene::touchBegan(Touch* touch , Event* event)
 	{
 		return true;
 	}
-    CCParticleSystem * particle = _emitter;	
+    ParticleSystem * particle = _emitter;	
     Point p = touch->getLocation();
     if (particle->getEmitterMode() == ParticleSystem::Mode::GRAVITY) 
     {
@@ -135,15 +135,15 @@ bool MainScene::touchBegan(Touch* touch , Event* event)
 
 void MainScene::touchMoved(Touch* touch , Event* )
 {
-    CCPoint p = touch->getLocation();
-    CCPoint plast = touch->getPreviousLocation();
-    CCPoint p_vector = p - plast;
+    Point p = touch->getLocation();
+    Point plast = touch->getPreviousLocation();
+    Point p_vector = p - plast;
 	if (_canMoveBg && _bg->isVisible())
 	{
 		_bg->setPosition(_bg->getPosition() + p_vector);
 		return ;
 	}
-	CCParticleSystem * particle = _emitter;	
+	ParticleSystem * particle = _emitter;	
     if (particle->getEmitterMode() == ParticleSystem::Mode::GRAVITY) 
     {
         //particle->setPosition(ccpAdd(p_vector , particle->getSourcePosition()));
@@ -154,7 +154,7 @@ void MainScene::touchMoved(Touch* touch , Event* )
     }
     else 
     {
-        particle->setPosition(ccpAdd(p_vector , particle->getPosition()));
+        particle->setPosition(p_vector + particle->getPosition());
         //QPropertyLineEditorFactory * factory = (QPropertyLineEditorFactory*)(EntityManager::get(EntityManager::ID_line_editor_factory));
         //factory->Property(PP::sourcePositionx)->setValue(particle->getPosition().x);
         //factory->Property(PP::sourcePositiony)->setValue(particle->getPosition().y);

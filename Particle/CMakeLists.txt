@@ -129,6 +129,8 @@ set(GAME_SRC
   Classes/CCQApplication.cpp
   Classes/CCQGLView.cpp
   Classes/CCQGLWidget.cpp
+  Classes/MainScene.cpp
+  Classes/ParticleEditorWindow.cpp
   ${PLATFORM_SPECIFIC_SRC}
 )
 
@@ -138,17 +140,19 @@ set(GAME_HEADERS
   Classes/CCQApplication.h
   Classes/CCQGLView.h
   Classes/CCQGLWidget.h
+  Classes/MainScene.h
+  Classes/ParticleEditorWindow.h
   ${PLATFORM_SPECIFIC_HEADERS}
 )
 
 set(QT_UI_FILES
-  Classes/AppDelegate.cpp
-  Classes/HelloWorldScene.cpp
-  Classes/CCQApplication.cpp
+  Classes/ParticleEditorWindow.ui
 )
 
+qt5_wrap_ui(ui_FILES ${QT_UI_FILES})
+
 if(GAME_HEADERS)
-add_executable(${APP_NAME} ${GAME_SRC} ${GAME_HEADERS})
+add_executable(${APP_NAME} ${GAME_SRC} ${GAME_HEADERS} ${ui_FILES})
 else()
 add_executable(${APP_NAME} ${GAME_SRC})
 endif()

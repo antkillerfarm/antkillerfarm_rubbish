@@ -1,8 +1,8 @@
 #ifndef QPROPERTYLINEEDITOR_H
 #define QPROPERTYLINEEDITOR_H
 
-#include <QWidget>
-#include <QtGui>
+//#include <QWidget>
+//#include <QtGui>
 
 namespace Ui {
 class QPropertyLineEditor;

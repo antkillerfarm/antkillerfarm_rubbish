@@ -2,7 +2,7 @@
 #define DIALOG_SAVETEXTURE_H
 
 #include <QDialog>
-#include "QtGui"
+//#include <QtGui>
 namespace Ui {
 class Dialog_SaveTexture;
 }
