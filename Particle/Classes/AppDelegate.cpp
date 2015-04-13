@@ -26,30 +26,30 @@ void AppDelegate::initGLContextAttrs()
 }
 
 bool AppDelegate::applicationDidFinishLaunching() {
-    // initialize director
-    auto director = Director::getInstance();
-    auto glview = CCQGLView::Create(960 ,600);
-    //glview = GLViewImpl::create("My Game");
+  // initialize director
+  auto director = Director::getInstance();
+  auto glview = CCQGLView::Create(960 ,600);
+  //glview = GLViewImpl::create("My Game");
 
-	glview->setBgColor(Color4B(50, 50, 50, 255));
-    director->setOpenGLView(glview);
+  glview->setBgColor(Color4B(50, 50, 50, 255));
+  director->setOpenGLView(glview);
 
-	auto scene = MainScene::createScene();
-	MainScene::getInstance()->getMainWindow()->setGLView(glview->getGLWidget());
-	MainScene::getInstance()->getMainWindow()->show();
+  auto scene = MainScene::createScene();
+  MainScene::getInstance()->getMainWindow()->setGLView(glview->getGLWidget());
+  MainScene::getInstance()->getMainWindow()->show();
 
-    // turn on display FPS
-    //director->setDisplayStats(true);
+  // turn on display FPS
+  //director->setDisplayStats(true);
 
-    // set FPS. the default value is 1.0/60 if you don't call this
-    director->setAnimationInterval(1.0 / 60);
+  // set FPS. the default value is 1.0/60 if you don't call this
+  director->setAnimationInterval(1.0 / 60);
 
-    // create a scene. it's an autorelease object
+  // create a scene. it's an autorelease object
     
-    // run
-    director->runWithScene(scene);
+  // run
+  director->runWithScene(scene);
 
-    return true;
+  return true;
 }
 
 // This function will be called when the app is inactive. When comes a phone call,it's be invoked too

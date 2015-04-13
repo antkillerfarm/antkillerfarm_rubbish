@@ -2,22 +2,22 @@
 
 NS_CC_BEGIN
 
-CCQGLWidget::CCQGLWidget(int width, int height, QWidget *parent)
-    : QGLWidget(QGLFormat(QGL::DoubleBuffer), parent)
+CCQGLWidget::CCQGLWidget(int width, int height)
+    : QGLWidget(QGLFormat(QGL::DoubleBuffer))
     , mouseMoveFunc(nullptr)
-	, mousePressFunc(nullptr)
-	, mouseReleaseFunc(nullptr)
-	, wheelFunc(nullptr)
-	, keyEventFunc(nullptr)
+    , mousePressFunc(nullptr)
+    , mouseReleaseFunc(nullptr)
+    , wheelFunc(nullptr)
+    , keyEventFunc(nullptr)
 {
-	////////////////////////FOR - opengl error :missing opengl version /////////////////////////////////////
-	QGLFormat format;
-	//format.setVersion(QGLFormat::OpenGL_ES_Version_2_0, QGLFormat::OpenGL_ES_Version_2_0);
-	format.setVersion(1, 1);
-	format.setDoubleBuffer(true);
-	///////////////////////////////////////////////////////////////////////////
-	setFormat(format);
-    resize(width, height);
+  ////////////////////////FOR - opengl error :missing opengl version /////////////////////////////////////
+  QGLFormat format;
+  //format.setVersion(QGLFormat::OpenGL_ES_Version_2_0, QGLFormat::OpenGL_ES_Version_2_0);
+  format.setVersion(1, 1);
+  format.setDoubleBuffer(true);
+  ///////////////////////////////////////////////////////////////////////////
+  setFormat(format);
+  resize(width, height);
 }
 
 CCQGLWidget::~CCQGLWidget()

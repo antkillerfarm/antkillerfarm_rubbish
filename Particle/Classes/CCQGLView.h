@@ -20,37 +20,37 @@ public:
     virtual ~CCQGLView();
 
     /* override functions */
-	virtual bool isOpenGLReady() override;
-	virtual void end() override;
-	virtual void swapBuffers() override;
-	virtual void setFrameSize(float width, float height) override;
-	virtual void setIMEKeyboardState(bool bOpen) override;
+    virtual bool isOpenGLReady() override;
+    virtual void end() override;
+    virtual void swapBuffers() override;
+    virtual void setFrameSize(float width, float height) override;
+    virtual void setIMEKeyboardState(bool bOpen) override;
     virtual void setViewName(const char* pszViewName);
 
     /* Qt functions */
     void mouseMove(QMouseEvent *event);
     void mousePress(QMouseEvent *event);
     void mouseRelease(QMouseEvent *event);
-	void wheel(QWheelEvent *event);
+    void wheel(QWheelEvent *event);
     QWidget * getGLWidget();
 
-	void resize(); // auto adjust frame size according to current window size
-	void updateWindowSize();
-	void setBgColor(Color4B color);
+    void resize(); // auto adjust frame size according to current window size
+    void updateWindowSize();
+    void setBgColor(Color4B color);
 
-	/* get the shared main open gl window */
-	static CCQGLView* getInstance();
+    /* get the shared main open gl window */
+    static CCQGLView* getInstance();
 
-	static CCQGLView *  Create(float w, float h);
+    static CCQGLView *  Create(float w, float h);
 
-	CCQGLWidget * getQGLWidget();
+    CCQGLWidget * getQGLWidget();
 
 private:
 
     bool			_isInit;
     float			_screenScaleFactor;
-	float			_lastWindowHeight;
-	Color4F			_bgColor;
+    float			_lastWindowHeight;
+    Color4F			_bgColor;
     
 };
 

@@ -17,7 +17,7 @@ class CCQGLWidget : public QGLWidget
 
 public:
     CCQGLWidget(){}
-    CCQGLWidget(int width, int height, QWidget *parent = 0);
+    CCQGLWidget(int width, int height);
     ~CCQGLWidget();
 
     void setMouseMoveFunc(MOUSE_PTRFUN func);

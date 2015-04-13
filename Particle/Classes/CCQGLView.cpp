@@ -35,7 +35,7 @@ CCQGLView::CCQGLView()
 	, _lastWindowHeight(0.0f)
 	, _bgColor(0, 0, 0, 1)
 {
-	setViewName("cocos2d-x QT Host Win32");
+	setViewName("cocos2d-x QT");
 }
 
 CCQGLView::~CCQGLView()
@@ -47,9 +47,11 @@ CCQGLView * CCQGLView::Create(float w, float h )
 {
 	s_pMainWindow = new CCQGLView;
 
+
     /* Qt Window, default design for 1080P monitor. */
     float width = w;
     float height = h;
+#if 0
     s_pMainWindow-> _window = new CCQGLWidget(width, height);
 
     s_pMainWindow->_window->setMouseMoveFunc(&cocos2d::mouseMove);
@@ -62,7 +64,7 @@ CCQGLView * CCQGLView::Create(float w, float h )
 	s_pMainWindow->_window->setMinimumSize(960, 640);
 	s_pMainWindow->_window->setMaximumSize(960, 640);
     s_pMainWindow->_window->show();
-
+#endif
 	//glfwInit();
 	s_pMainWindow->setDesignResolutionSize(width, height, ResolutionPolicy::EXACT_FIT);
 	s_pMainWindow->initGlew();

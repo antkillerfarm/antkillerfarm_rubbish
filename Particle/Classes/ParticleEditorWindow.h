@@ -25,9 +25,9 @@ class ParticleEditorWindow : public QMainWindow
     Q_OBJECT
 private:
     QWidget             *_glWidget;
-	QPixmap  _png;
+    QPixmap  _png;
 public:
-	void setGLView(QWidget *glWidget);
+    void setGLView(QWidget *glWidget);
     explicit ParticleEditorWindow();
     ~ParticleEditorWindow();
     void createActions();
@@ -40,7 +40,7 @@ public:
     void updateRecentFileActions();
     void setCurrentFile(const QString &fileName);
     void readplist(QString filePath);
-	void openExample( const char * );
+    void openExample( const char * );
 
 public slots:
     void propertyValueChanged(IPropertyEditor *editor , double value);
@@ -61,26 +61,25 @@ private slots:
     
     void on_name_blenddst_currentIndexChanged(const QString &arg1);
 
-    
     void on_name_blendNormal_clicked();
     
     void on_name_blendAdditive_clicked();
     
     void on_pushButton_clicked();
     
-	void on_btn_startColor_clicked();
-	void on_btn_endColor_clicked();
-	void on_changeButton_clicked();
-	void on_removeButton_clicked();
-	void on_box_move_stateChanged(int state);
-	void on_btn_bgColor_clicked();
+    void on_btn_startColor_clicked();
+    void on_btn_endColor_clicked();
+    void on_changeButton_clicked();
+    void on_removeButton_clicked();
+    void on_box_move_stateChanged(int state);
+    void on_btn_bgColor_clicked();
 
 	//custom slots
     void openRecentFile();
     
 protected:
     void closeEvent(QCloseEvent *event) ;
-	void scaleImage(QImage & img,  int x , int y );
+    void scaleImage(QImage & img,  int x , int y );
 private:
 
     QLabel * m_labelTexture;

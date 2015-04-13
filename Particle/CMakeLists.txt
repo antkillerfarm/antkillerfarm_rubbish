@@ -135,6 +135,11 @@ set(GAME_SRC
   Classes/qpropertylineeditor.cpp
   Classes/qpropertylineeditorfactory.cpp
   Classes/qpropertylineeditorgroup.cpp
+  Classes/dialog_savetexture.cpp
+  Classes/dialog_about.cpp
+  Classes/qsliderlineeditor.cpp
+  Classes/entitymanager.cpp
+  Classes/flowlayout.cpp
   ${PLATFORM_SPECIFIC_SRC}
 )
 
@@ -150,12 +155,20 @@ set(GAME_HEADERS
   Classes/qpropertylineeditor.h
   Classes/qpropertylineeditorfactory.h
   Classes/qpropertylineeditorgroup.h
+  Classes/dialog_savetexture.h
+  Classes/dialog_about.h
+  Classes/qsliderlineeditor.h
+  Classes/entitymanager.h
+  Classes/flowlayout.h
   ${PLATFORM_SPECIFIC_HEADERS}
 )
 
 set(QT_UI_FILES
   Classes/ParticleEditorWindow.ui
   Classes/qpropertylineeditor.ui
+  Classes/dialog_savetexture.ui
+  Classes/dialog_about.ui
+  Classes/qsliderlineeditor.ui
 )
 
 qt5_wrap_ui(ui_FILES ${QT_UI_FILES})
