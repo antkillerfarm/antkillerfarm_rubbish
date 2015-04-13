@@ -131,6 +131,10 @@ set(GAME_SRC
   Classes/CCQGLWidget.cpp
   Classes/MainScene.cpp
   Classes/ParticleEditorWindow.cpp
+  Classes/ParticleProperties.cpp
+  Classes/qpropertylineeditor.cpp
+  Classes/qpropertylineeditorfactory.cpp
+  Classes/qpropertylineeditorgroup.cpp
   ${PLATFORM_SPECIFIC_SRC}
 )
 
@@ -142,11 +146,16 @@ set(GAME_HEADERS
   Classes/CCQGLWidget.h
   Classes/MainScene.h
   Classes/ParticleEditorWindow.h
+  Classes/ParticleProperties.h
+  Classes/qpropertylineeditor.h
+  Classes/qpropertylineeditorfactory.h
+  Classes/qpropertylineeditorgroup.h
   ${PLATFORM_SPECIFIC_HEADERS}
 )
 
 set(QT_UI_FILES
   Classes/ParticleEditorWindow.ui
+  Classes/qpropertylineeditor.ui
 )
 
 qt5_wrap_ui(ui_FILES ${QT_UI_FILES})

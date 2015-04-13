@@ -1,7 +1,7 @@
 #ifndef QPROPERTYLINEEDITOR_H
 #define QPROPERTYLINEEDITOR_H
 
-//#include <QWidget>
+#include <QWidget>
 //#include <QtGui>
 
 namespace Ui {

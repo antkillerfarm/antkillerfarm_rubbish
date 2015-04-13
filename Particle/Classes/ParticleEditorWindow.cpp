@@ -3,6 +3,7 @@
 #include <QFileDialog>
 #include <QColorDialog>
 #include <QMessageBox>
+#include <QCloseEvent>
 #include "ui_ParticleEditorWindow.h"
 #include "ParticleProperties.h"
 #include "ParticleEditorWindow.h"
@@ -405,7 +406,8 @@ void ParticleEditorWindow::propertyValueChanged(IPropertyEditor *editor, double 
     case PP::maxParticles:
     {
         particle->stopSystem();
-		MainScene::getInstance()->resetPs(getDict() ,value);
+	ValueMap dict = getDict();
+	MainScene::getInstance()->resetPs(dict, value);
 //         CCDictionary<std::string ,CCObject*> * dict = getDict();
 //         MyScene::reloadMyParticle(QDir::currentPath() ,dict ,value);
 //         dict->release();
@@ -468,12 +470,12 @@ void ParticleEditorWindow::propertyValueChanged(IPropertyEditor *editor, double 
         break;
    }
     
-    ccColor4F cs4 = particle->getStartColor();
-    ccColor4F ce4 = particle->getEndColor();
-    ccColor4F csv4 = particle->getStartColorVar();
-    ccColor4F cev4 = particle->getEndColorVar();
-    CCLayerColor * _myscene = MainScene::getInstance();
-    ccColor3B bgC3 = MainScene::getInstance()->getColor();
+    Color4F cs4 = particle->getStartColor();
+    Color4F ce4 = particle->getEndColor();
+    Color4F csv4 = particle->getStartColorVar();
+    Color4F cev4 = particle->getEndColorVar();
+    LayerColor * _myscene = MainScene::getInstance();
+    Color3B bgC3 = MainScene::getInstance()->getColor();
     switch(editor->id)
     {
     // color setting.  
@@ -527,13 +529,13 @@ void ParticleEditorWindow::propertyValueChanged(IPropertyEditor *editor, double 
         particle->setEndColorVar(Color4F(cev4.r,cev4.g,  cev4.b ,value/ 255));
         break;
     case PP::bg_color_r:
-        _myscene->setColor(ccc3(value , bgC3.g, bgC3.b));
+        _myscene->setColor(Color3B(value, bgC3.g, bgC3.b));
         break;
     case PP::bg_color_g:
-        _myscene->setColor(ccc3(bgC3.r , value, bgC3.b));
+        _myscene->setColor(Color3B(bgC3.r, value, bgC3.b));
         break;
     case PP::bg_color_b:
-        _myscene->setColor(ccc3(bgC3.r  , bgC3.g, value));
+        _myscene->setColor(Color3B(bgC3.r, bgC3.g, value));
         break;
     case PP::bg_color_a:
         _myscene->setOpacity(value);
@@ -558,12 +560,13 @@ void ParticleEditorWindow::act_openRenctFileMenu()
 
 void ParticleEditorWindow::readplist(QString filePath)
 {
-    CCTextureCache::sharedTextureCache()->removeAllTextures();
+    Director::getInstance()->getTextureCache()->removeAllTextures();
     // open plist file , read to the editor
     QString pngfilename;
     int ret = read(filePath , pngfilename);
     //MyScene::initMyParticle(filePath);
-	MainScene::getInstance()->initPs(filePath.toStdString());
+    
+    MainScene::getInstance()->initPs(filePath.toStdString());
 	
     if(ret ==-1)return;
     bool isEmbed = ret ==1 ?true:false;
@@ -668,7 +671,7 @@ void ParticleEditorWindow::act_saveas()
 
 void ParticleEditorWindow::act_play()
 {
-    CCParticleSystem * particleNode = MainScene::getInstance()->getPs();
+    ParticleSystem * particleNode = MainScene::getInstance()->getPs();
     if (particleNode == 0)
         return;
     particleNode->resetSystem();
@@ -769,11 +772,11 @@ void ParticleEditorWindow::on_name_eimitterType_currentIndexChanged(const QStrin
         m_emitterType_gravity->hide();
         if (!isReading)       
         {
-            CCParticleSystem * particleNode = MainScene::getInstance()->getPs();  
+            ParticleSystem * particleNode = MainScene::getInstance()->getPs();  
             if (particleNode != 0)
             {
-                particleNode->setEmitterMode(kCCParticleModeRadius);
-                CCPoint sourcePos = particleNode->getPosition();
+                particleNode->setEmitterMode(ParticleSystem::Mode::RADIUS);
+                Point sourcePos = particleNode->getPosition();
                 particleNode->setPosition(sourcePos);
                 particleNode->resetSystem();
             }
@@ -793,11 +796,11 @@ void ParticleEditorWindow::on_name_eimitterType_currentIndexChanged(const QStrin
         m_emitterType_radial->hide();
         if (!isReading)
         {
-            CCParticleSystem * particleNode = MainScene::getInstance()->getPs();  
+            ParticleSystem * particleNode = MainScene::getInstance()->getPs();  
             if (particleNode != 0)
             {
-                particleNode->setEmitterMode(kCCParticleModeGravity);
-                CCPoint sourcePos = particleNode->getPosition();
+                particleNode->setEmitterMode(ParticleSystem::Mode::GRAVITY);
+                Point sourcePos = particleNode->getPosition();
                 particleNode->setPosition(sourcePos);
                 //particleNode->setSourcePosition(sourcePos);
                 particleNode->resetSystem();
@@ -855,10 +858,10 @@ void ParticleEditorWindow::write(QString plistFile ,QString textureFile , bool e
 void ParticleEditorWindow::on_name_blenddst_currentIndexChanged(const QString &val)
 {
     my_valueChanged();
-    CCParticleSystem * particleNode = MainScene::getInstance()->getPs();
+    ParticleSystem * particleNode = MainScene::getInstance()->getPs();
 	//MainScene::getInstance()->
     if ( particleNode == 0 ) return;
-    ccBlendFunc blendFuc = particleNode->getBlendFunc();
+    BlendFunc blendFuc = particleNode->getBlendFunc();
     blendFuc.dst = p_blendFucValOfName(val);
     particleNode->setBlendFunc(blendFuc);
 }
@@ -866,9 +869,9 @@ void ParticleEditorWindow::on_name_blenddst_currentIndexChanged(const QString &v
 void ParticleEditorWindow::on_name_blendsrc_currentIndexChanged(const QString &val)
 {
     my_valueChanged();
-    CCParticleSystem * particleNode = MainScene::getInstance()->getPs();
+    ParticleSystem * particleNode = MainScene::getInstance()->getPs();
     if ( particleNode == 0 ) return;
-    ccBlendFunc blendFuc = particleNode->getBlendFunc();
+    BlendFunc blendFuc = particleNode->getBlendFunc();
     blendFuc.src = p_blendFucValOfName(val);
     particleNode->setBlendFunc(blendFuc);
 }
@@ -889,7 +892,7 @@ void ParticleEditorWindow::on_name_blendAdditive_clicked()
 
 void ParticleEditorWindow::on_pushButton_clicked()
 {
-    CCParticleSystem * particleNode = MainScene::getInstance()->getPs();
+    ParticleSystem * particleNode = MainScene::getInstance()->getPs();
     if ( particleNode == 0 ) return;
     QSettings settings(QString("setting.ini"),QSettings::IniFormat);
     QString dir = settings.value("lastOpenDir" , QDir::currentPath()).toString();
@@ -904,7 +907,7 @@ void ParticleEditorWindow::on_pushButton_clicked()
         QFileInfo fileInfo = QFileInfo(filePath);
         QString pngPath = fileInfo.dir().path();
         QString pngName = fileInfo.fileName();
-        particleNode->setTexture(CCTextureCache::sharedTextureCache()->addImage(pngName.toStdString().c_str()));
+        particleNode->setTexture(Director::getInstance()->getTextureCache()->addImage(pngName.toStdString().c_str()));
         my_openPng(pngPath , pngName);
     }
 }

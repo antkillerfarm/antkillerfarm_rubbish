@@ -31,7 +31,7 @@ ParticleEditorWindow * MainScene::getMainWindow()
 	return _mainwindow;
 }
 
-void MainScene::initPs( std::string & filePath )
+void MainScene::initPs(std::string filePath)
 {
 	if (_emitter != NULL)
 		_emitter->removeFromParentAndCleanup(true);
@@ -40,7 +40,7 @@ void MainScene::initPs( std::string & filePath )
 	addChild(_emitter);
 }
 
-void MainScene::resetPs( ValueMap & dict , double maxparticles )
+void MainScene::resetPs(ValueMap & dict , double maxparticles)
 {
 	Point oldP = _emitter->getPosition();
 	dict[pnameof(PP::maxParticles)] = maxparticles;
@@ -50,13 +50,13 @@ void MainScene::resetPs( ValueMap & dict , double maxparticles )
 	addChild(_emitter);
 }
 
-void MainScene::changeBg( std::string & filePath )
+void MainScene::changeBg(std::string filePath)
 {
 	_bg->setVisible(true);
 	Texture2D * tex = Director::getInstance()->getTextureCache()->addImage(filePath);
 	_bg->setTexture(tex);
 	Size size = tex->getContentSize();
-	_bg->setTextureRect(Rect(0,0,size.width,size.height) );
+	_bg->setTextureRect(Rect(0,0,size.width,size.height));
 
 }
 

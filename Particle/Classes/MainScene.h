@@ -23,10 +23,10 @@ public:
     CREATE_FUNC(MainScene);
 	void addTouchSupport();
 	void onEnter();
-	void initPs( std::string & filePath );
-	void resetPs( ValueMap & dict , double maxparticles );
+	void initPs(std::string filePath);
+	void resetPs(ValueMap & dict , double maxparticles );
 	ParticleEditorWindow * getMainWindow();
-	void changeBg( std::string &  filePath );
+	void changeBg(std::string filePath);
 	void removeBg();
 	void toggleHidden();
 	void toggleMove(bool);
