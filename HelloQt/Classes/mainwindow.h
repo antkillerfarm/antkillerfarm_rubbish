@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 
+class AppDelegate;
 namespace Ui {
 class MainWindow;
 }
@@ -15,8 +16,13 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    void setCocosAppDelegate(AppDelegate *appDelegate);
+protected:
+    void closeEvent(QCloseEvent *);
+
 private:
     Ui::MainWindow *ui;
+    AppDelegate *m_appDelegate;
 };
 
 #endif // MAINWINDOW_H
