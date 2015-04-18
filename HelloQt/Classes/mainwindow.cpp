@@ -10,6 +10,7 @@ MainWindow::MainWindow(QWidget *parent) :
     m_appDelegate(NULL)
 {
     ui->setupUi(this);
+    ui->centralWidget->initWidget();
 }
 
 MainWindow::~MainWindow()

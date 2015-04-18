@@ -22,6 +22,8 @@ public:
     GLWidget(QWidget *parent = 0);
     ~GLWidget();
 
+    void initWidget();
+
     void setMouseMoveFunc(PTRFUN func);
     void setMousePressFunc(PTRFUN func);
     void setMouseReleaseFunc(PTRFUN func);

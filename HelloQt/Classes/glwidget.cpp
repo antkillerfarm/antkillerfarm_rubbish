@@ -1,3 +1,4 @@
+#include "AppDelegate.h"
 #include "glwidget.h"
 
 GLWidget::GLWidget(QWidget *parent)
@@ -12,6 +13,13 @@ GLWidget::GLWidget(QWidget *parent)
 
 GLWidget::~GLWidget()
 {
+}
+
+void GLWidget::initWidget()
+{
+  AppDelegate app;
+  app.initWidget(this);
+  //Application::getInstance()->run();
 }
 
 void GLWidget::setMouseMoveFunc(PTRFUN func)

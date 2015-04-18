@@ -34,7 +34,7 @@ QtGLViewImpl::~QtGLViewImpl()
     CCLOGINFO("deallocing QtGLViewImpl: %p", this);
 }
 
-QtGLViewImpl* QtGLViewImpl::create(QGLWidget* qt_window)
+QtGLViewImpl* QtGLViewImpl::create(GLWidget* qt_window)
 {
     auto ret = new (std::nothrow) QtGLViewImpl;
     if(ret && ret->initWithRect(qt_window)) {
@@ -69,6 +69,10 @@ bool QtGLViewImpl::initWithRect(GLWidget* qt_window)
     return true;
 }
 
+bool QtGLViewImpl::isOpenGLReady()
+{
+    return nullptr != m_window;
+}
 
 void QtGLViewImpl::end()
 {
@@ -83,6 +87,20 @@ void QtGLViewImpl::swapBuffers()
 
 }
 
+bool QtGLViewImpl::windowShouldClose()
+{
+        return true;
+}
+
+void QtGLViewImpl::pollEvents()
+{
+
+}
+
+void QtGLViewImpl::setIMEKeyboardState(bool /*bOpen*/)
+{
+
+}
 
 void QtGLViewImpl::setFrameZoomFactor(float zoomFactor)
 {
@@ -111,6 +129,16 @@ void QtGLViewImpl::setFrameSize(float width, float height)
 {
     GLView::setFrameSize(width, height);
     //updateFrameSize();
+}
+
+void QtGLViewImpl::setViewPortInPoints(float x , float y , float w , float h)
+{
+
+}
+
+void QtGLViewImpl::setScissorInPoints(float x , float y , float w , float h)
+{
+
 }
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)

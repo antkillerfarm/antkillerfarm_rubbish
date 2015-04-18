@@ -1,5 +1,7 @@
 #include "AppDelegate.h"
 #include "HelloWorldScene.h"
+#include "CCGLViewImpl-qt.h"
+
 
 USING_NS_CC;
 
@@ -9,6 +11,11 @@ AppDelegate::AppDelegate() {
 
 AppDelegate::~AppDelegate() 
 {
+}
+
+void AppDelegate::initWidget(GLWidget* glwidget)
+{
+  m_glwidget = glwidget;
 }
 
 //if you want a different context,just modify the value of glContextAttrs
@@ -27,7 +34,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     auto director = Director::getInstance();
     auto glview = director->getOpenGLView();
     if(!glview) {
-        glview = GLViewImpl::create("My Game");
+      glview = QtGLViewImpl::create(this->m_glwidget);
         director->setOpenGLView(glview);
     }
 

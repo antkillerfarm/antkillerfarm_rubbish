@@ -16,8 +16,7 @@ int main(int argc, char **argv)
     QApplication a(argc, argv);
     MainWindow w;
     w.show();
-    AppDelegate app;
-    return Application::getInstance()->run();
+    return a.exec();
 }
 #else
 #include "mainwindow.h"

@@ -4,15 +4,14 @@
 #include "base/CCRef.h"
 #include "platform/CCCommon.h"
 #include "platform/CCGLView.h"
+#include "glwidget.h"
 
 NS_CC_BEGIN
 
 class CC_DLL QtGLViewImpl : public GLView
 {
 public:
-    static QtGLViewImpl* create(const std::string& viewName);
-    static QtGLViewImpl* createWithRect(const std::string& viewName, Rect size, float frameZoomFactor = 1.0f);
-    static QtGLViewImpl* createWithFullScreen(const std::string& viewName);
+    static QtGLViewImpl* create(GLWidget* qt_window);
 
     /*
      *frameZoomFactor for frame. This method is for debugging big resolution (e.g.new ipad) app on desktop.
@@ -25,7 +24,6 @@ public:
 
     virtual void setViewPortInPoints(float x , float y , float w , float h);
     virtual void setScissorInPoints(float x , float y , float w , float h);
-
 
     bool windowShouldClose();
     void pollEvents();
@@ -46,8 +44,7 @@ protected:
     QtGLViewImpl();
     virtual ~QtGLViewImpl();
 
-    bool initWithRect(const std::string& viewName, Rect rect, float frameZoomFactor);
-    bool initWithFullScreen(const std::string& viewName);
+    bool initWithRect(GLWidget* qt_window);
 
     void updateFrameSize();
     bool initGlew();
