@@ -48,8 +48,9 @@ QtGLViewImpl* QtGLViewImpl::create(GLWidget* qt_window)
 bool QtGLViewImpl::initWithRect(GLWidget* qt_window)
 {
 
-  m_window = qt_window;
-  //setFrameSize();
+    m_window = qt_window;
+    m_window->makeCurrent();
+   //setFrameSize();
 
     // check OpenGL version at first
     const GLubyte* glVersion = glGetString(GL_VERSION);
@@ -65,7 +66,6 @@ bool QtGLViewImpl::initWithRect(GLWidget* qt_window)
     }
     initGlew();
 
-    m_window->makeCurrent();
     return true;
 }
 

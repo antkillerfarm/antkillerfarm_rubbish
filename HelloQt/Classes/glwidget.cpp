@@ -15,11 +15,11 @@ GLWidget::~GLWidget()
 {
 }
 
-void GLWidget::initWidget()
+void GLWidget::initWidget(AppDelegate* app)
 {
-  AppDelegate app;
-  app.initWidget(this);
-  //Application::getInstance()->run();
+  app->initWidget(this);
+  this->show();
+  cocos2d::Application::getInstance()->run();
 }
 
 void GLWidget::setMouseMoveFunc(PTRFUN func)

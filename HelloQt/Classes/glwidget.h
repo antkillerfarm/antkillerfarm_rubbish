@@ -13,6 +13,7 @@ class QTimer;
 typedef void(*PTRFUN)(QMouseEvent *event);
 typedef void(*ACCEL_PTRFUN)(QKeyEvent *event);
 
+class AppDelegate;
 class  GLWidget : public QGLWidget
 {
     Q_OBJECT
@@ -22,7 +23,7 @@ public:
     GLWidget(QWidget *parent = 0);
     ~GLWidget();
 
-    void initWidget();
+    void initWidget(AppDelegate *appDelegate);
 
     void setMouseMoveFunc(PTRFUN func);
     void setMousePressFunc(PTRFUN func);

@@ -15,6 +15,9 @@ int main(int argc, char **argv)
     // create the application instance
     QApplication a(argc, argv);
     MainWindow w;
+    AppDelegate app;
+    w.setCocosAppDelegate(&app);
+    w.initGLWidget();
     w.show();
     return a.exec();
 }

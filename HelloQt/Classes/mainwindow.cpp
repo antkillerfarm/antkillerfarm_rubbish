@@ -10,7 +10,6 @@ MainWindow::MainWindow(QWidget *parent) :
     m_appDelegate(NULL)
 {
     ui->setupUi(this);
-    ui->centralWidget->initWidget();
 }
 
 MainWindow::~MainWindow()
@@ -27,4 +26,9 @@ void MainWindow::closeEvent(QCloseEvent *)
 void MainWindow::setCocosAppDelegate(AppDelegate *appDelegate)
 {
     m_appDelegate = appDelegate;
+}
+
+void MainWindow::initGLWidget()
+{
+  ui->cocos_widget->initWidget(m_appDelegate);
 }
