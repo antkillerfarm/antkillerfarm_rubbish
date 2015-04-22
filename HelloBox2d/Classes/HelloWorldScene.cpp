@@ -101,8 +101,8 @@ bool HelloWorld::init()
     // Add listener
     _eventDispatcher->addEventListenerWithSceneGraphPriority(listener1, this);
 
-	update_cnt = 0;
-	schedule( schedule_selector(HelloWorld::myupdate), 6.0);
+    update_cnt = 0;
+    schedule( schedule_selector(HelloWorld::myupdate2), 6.0);
 
     scheduleUpdate();
     
@@ -202,6 +202,48 @@ void HelloWorld::myupdate(float dt)
     case 2: emitter = ParticleMeteor::create();
       break;
     case 3: emitter = ParticleExplosion::create();
+      break;
+    case 4: emitter = ParticleSmoke::create();
+      break;
+    case 5: emitter = ParticleSnow::create();
+      break;
+    case 6: emitter = ParticleRain::create();
+      break;
+    case 7: emitter = ParticleSpiral::create();
+      break;
+    case 8: emitter = ParticleFire::create();
+      break;
+    case 9: emitter = ParticleFireworks::create();
+      break;
+    case 10: emitter = ParticleGalaxy::create();
+      break;
+    }
+  Size visibleSize = Director::getInstance()->getVisibleSize();
+  Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
+  emitter->setPosition(Vec2(origin.x + visibleSize.width / 2,
+			    origin.y + visibleSize.height / 2));
+  this->addChild(emitter, 10);
+}
+
+void HelloWorld::myupdate2(float dt)
+{
+  update_cnt++;
+  update_cnt = update_cnt % EMIT_NUM;
+  this->removeChild(emitter);
+  switch (update_cnt)
+    {
+    case 0: emitter = ParticleSun::create();
+      break;
+    case 1: emitter = ParticleSun::create();
+      emitter->setBlendAdditive(false);
+      break;
+    case 2: emitter = ParticleSun::create();
+      emitter->setGravity(Vec2(100,0));
+      break;
+    case 3: emitter = ParticleSun::create();
+      emitter->setBlendAdditive(false);
+      emitter->setGravity(Vec2(100,0));
       break;
     case 4: emitter = ParticleSmoke::create();
       break;

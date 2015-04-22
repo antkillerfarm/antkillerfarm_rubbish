@@ -19,7 +19,8 @@ public:
     b2Body* createGround(int sx,int sy,int width,int height);
     void createSprite(cocos2d::Point location,char image[]);
     void update(float dt);
-	void myupdate(float dt);
+    void myupdate(float dt);
+    void myupdate2(float dt);
     //virtual void onTouchEnded(cocos2d::Touch* touch, cocos2d::Event* unused_event);
 
     // implement the "static create()" method manually
