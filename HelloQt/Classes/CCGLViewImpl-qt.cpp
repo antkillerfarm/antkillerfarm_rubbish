@@ -47,7 +47,6 @@ QtGLViewImpl* QtGLViewImpl::create(GLWidget* qt_window)
 
 bool QtGLViewImpl::initWithRect(GLWidget* qt_window)
 {
-
     m_window = qt_window;
     m_window->makeCurrent();
    //setFrameSize();

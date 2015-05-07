@@ -24,6 +24,7 @@ public:
     ~GLWidget();
 
     void initWidget(AppDelegate *appDelegate);
+    void paintGL();
 
     void setMouseMoveFunc(PTRFUN func);
     void setMousePressFunc(PTRFUN func);

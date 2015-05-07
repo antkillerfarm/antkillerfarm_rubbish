@@ -1,6 +1,8 @@
 #include "AppDelegate.h"
 #include "glwidget.h"
 
+USING_NS_CC;
+
 GLWidget::GLWidget(QWidget *parent)
     : QGLWidget(QGLFormat(QGL::DoubleBuffer), parent)
     , mouseMoveFunc(NULL)
@@ -18,8 +20,15 @@ GLWidget::~GLWidget()
 void GLWidget::initWidget(AppDelegate* app)
 {
   app->initWidget(this);
-  this->show();
-  cocos2d::Application::getInstance()->run();
+  //this->show();
+  //cocos2d::Application::getInstance()->run();
+}
+
+void GLWidget::paintGL()
+{
+  auto director = Director::getInstance();
+  director->mainLoop();
+  printf("GLWidget::paintGL\r\n");
 }
 
 void GLWidget::setMouseMoveFunc(PTRFUN func)
