@@ -25,6 +25,7 @@ public:
 
     void initWidget(AppDelegate *appDelegate);
     void paintGL();
+    void resizeGL(int width, int height);
 
     void setMouseMoveFunc(PTRFUN func);
     void setMousePressFunc(PTRFUN func);

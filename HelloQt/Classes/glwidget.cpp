@@ -22,14 +22,50 @@ void GLWidget::initWidget(AppDelegate* app)
   app->initWidget(this);
   //this->show();
   //cocos2d::Application::getInstance()->run();
+  //app->initGLContextAttrs();
+  //app->applicationDidFinishLaunching();
 }
 
 void GLWidget::paintGL()
 {
-  auto director = Director::getInstance();
-  director->mainLoop();
-  printf("GLWidget::paintGL\r\n");
+#if 0
+    auto director = Director::getInstance();
+    director->mainLoop();
+    printf("GLWidget::paintGL\r\n");
+#else
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glLoadIdentity();
+    glTranslatef(0.0, 0.0, -10.0);
+    glRotatef(0 / 16.0, 1.0, 0.0, 0.0);
+    glRotatef(0 / 16.0, 0.0, 1.0, 0.0);
+    glRotatef(0 / 16.0, 0.0, 0.0, 1.0);
+    qglColor(Qt::red);
+    glBegin(GL_QUADS);
+        glNormal3f(0,0,-1);
+        glVertex3f(-1,-1,0);
+        glVertex3f(-1,1,0);
+        glVertex3f(1,1,0);
+        glVertex3f(1,-1,0);
+
+    glEnd();
+#endif
 }
+
+void GLWidget::resizeGL(int width, int height)
+{
+    int side = qMin(width, height);
+    glViewport((width - side) / 2, (height - side) / 2, side, side);
+
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+#ifdef QT_OPENGL_ES_1
+    glOrthof(-2, +2, -2, +2, 1.0, 15.0);
+#else
+    glOrtho(-2, +2, -2, +2, 1.0, 15.0);
+#endif
+    glMatrixMode(GL_MODELVIEW);
+}
+
 
 void GLWidget::setMouseMoveFunc(PTRFUN func)
 {
