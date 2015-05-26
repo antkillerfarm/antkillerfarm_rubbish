@@ -44,7 +44,7 @@ protected:
     QtGLViewImpl();
     virtual ~QtGLViewImpl();
 
-    bool initWithRect(GLWidget* qt_window);
+    bool initWithRect(GLWidget* qt_window, Rect rect, float frameZoomFactor);
 
     void updateFrameSize();
     bool initGlew();

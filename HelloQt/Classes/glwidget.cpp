@@ -22,8 +22,8 @@ void GLWidget::initWidget(AppDelegate* app)
   app->initWidget(this);
   //this->show();
   //cocos2d::Application::getInstance()->run();
-  //app->initGLContextAttrs();
-  //app->applicationDidFinishLaunching();
+  app->initGLContextAttrs();
+  app->applicationDidFinishLaunching();
 }
 
 void GLWidget::paintGL()
@@ -53,6 +53,7 @@ void GLWidget::paintGL()
 
 void GLWidget::resizeGL(int width, int height)
 {
+#if 1
     int side = qMin(width, height);
     glViewport((width - side) / 2, (height - side) / 2, side, side);
 
@@ -64,6 +65,7 @@ void GLWidget::resizeGL(int width, int height)
     glOrtho(-2, +2, -2, +2, 1.0, 15.0);
 #endif
     glMatrixMode(GL_MODELVIEW);
+#endif
 }
 
 

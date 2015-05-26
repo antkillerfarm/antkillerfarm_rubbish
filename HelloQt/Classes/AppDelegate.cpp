@@ -35,9 +35,11 @@ bool AppDelegate::applicationDidFinishLaunching() {
     auto glview = director->getOpenGLView();
     if(!glview) {
       glview = QtGLViewImpl::create(this->m_glwidget);
-        director->setOpenGLView(glview);
+      director->setOpenGLView(glview);
+      //glview->setDesignResolutionSize(960, 640, ResolutionPolicy::SHOW_ALL);
     }
 
+#if 1
     // turn on display FPS
     director->setDisplayStats(true);
 
@@ -49,7 +51,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     // run
     director->runWithScene(scene);
-
+#endif
     return true;
 }
 

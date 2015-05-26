@@ -37,7 +37,7 @@ QtGLViewImpl::~QtGLViewImpl()
 QtGLViewImpl* QtGLViewImpl::create(GLWidget* qt_window)
 {
     auto ret = new (std::nothrow) QtGLViewImpl;
-    if(ret && ret->initWithRect(qt_window)) {
+    if(ret && ret->initWithRect(qt_window, Rect(0, 0, 640, 480), 1)) {
         ret->autorelease();
         return ret;
     }
@@ -45,11 +45,11 @@ QtGLViewImpl* QtGLViewImpl::create(GLWidget* qt_window)
     return nullptr;
 }
 
-bool QtGLViewImpl::initWithRect(GLWidget* qt_window)
+bool QtGLViewImpl::initWithRect(GLWidget* qt_window, Rect rect, float frameZoomFactor)
 {
     m_window = qt_window;
     m_window->makeCurrent();
-   //setFrameSize();
+    setFrameSize(rect.size.width, rect.size.height);
 
     // check OpenGL version at first
     const GLubyte* glVersion = glGetString(GL_VERSION);
@@ -65,6 +65,7 @@ bool QtGLViewImpl::initWithRect(GLWidget* qt_window)
     }
     initGlew();
 
+    //setDesignResolutionSize(rect.size.width, rect.size.height, ResolutionPolicy::SHOW_ALL);
     return true;
 }
 
@@ -81,9 +82,8 @@ void QtGLViewImpl::end()
 
 void QtGLViewImpl::swapBuffers()
 {
-    if(m_window)
-        m_window->makeCurrent();
-
+  if(m_window)
+        m_window->swapBuffers();
 }
 
 bool QtGLViewImpl::windowShouldClose()
