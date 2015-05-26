@@ -28,7 +28,7 @@ void GLWidget::initWidget(AppDelegate* app)
 
 void GLWidget::paintGL()
 {
-#if 0
+#if 1
     auto director = Director::getInstance();
     director->mainLoop();
     printf("GLWidget::paintGL\r\n");
@@ -55,7 +55,8 @@ void GLWidget::resizeGL(int width, int height)
 {
 #if 1
     int side = qMin(width, height);
-    glViewport((width - side) / 2, (height - side) / 2, side, side);
+    //glViewport((width - side) / 2, (height - side) / 2, side, side);
+    glViewport(0, 0, width, height);
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
