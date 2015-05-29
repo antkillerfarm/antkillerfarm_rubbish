@@ -10,6 +10,16 @@
 
 USING_NS_CC;
 
+static pthread_t thread;
+
+static void* thread_func(void* data)
+{
+    Application::getInstance()->run();
+
+    QApplication::exit(0);
+    return NULL;
+}
+
 int main(int argc, char **argv)
 {
     // create the application instance
@@ -19,7 +29,12 @@ int main(int argc, char **argv)
     w.setCocosAppDelegate(&app);
     w.initGLWidget();
     w.show();
-    return a.exec();
+
+    pthread_create(&thread, NULL, thread_func, NULL);
+    rc = a.exec();
+    pthread_join(thread, NULL);
+
+    return rc;
 }
 #else
 #include "mainwindow.h"
