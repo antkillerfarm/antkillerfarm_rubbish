@@ -23,6 +23,7 @@ static void* thread_func(void* data)
 int main(int argc, char **argv)
 {
     // create the application instance
+    int rc;
     QApplication a(argc, argv);
     MainWindow w;
     AppDelegate app;

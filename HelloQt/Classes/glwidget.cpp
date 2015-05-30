@@ -22,16 +22,16 @@ void GLWidget::initWidget(AppDelegate* app)
   app->initWidget(this);
   //this->show();
   //cocos2d::Application::getInstance()->run();
-  app->initGLContextAttrs();
-  app->applicationDidFinishLaunching();
+  //app->initGLContextAttrs();
+  //app->applicationDidFinishLaunching();
 }
 
 void GLWidget::paintGL()
 {
 #if 1
-    auto director = Director::getInstance();
-    director->mainLoop();
-    printf("GLWidget::paintGL\r\n");
+  //auto director = Director::getInstance();
+  //director->mainLoop();
+  //printf("GLWidget::paintGL\r\n");
 #else
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
@@ -58,14 +58,14 @@ void GLWidget::resizeGL(int width, int height)
     //glViewport((width - side) / 2, (height - side) / 2, side, side);
     glViewport(0, 0, width, height);
 
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
+    //glMatrixMode(GL_PROJECTION);
+    //glLoadIdentity();
 #ifdef QT_OPENGL_ES_1
-    glOrthof(-2, +2, -2, +2, 1.0, 15.0);
+    //glOrthof(-2, +2, -2, +2, 1.0, 15.0);
 #else
-    glOrtho(-2, +2, -2, +2, 1.0, 15.0);
+    //glOrtho(-2, +2, -2, +2, 1.0, 15.0);
 #endif
-    glMatrixMode(GL_MODELVIEW);
+    //glMatrixMode(GL_MODELVIEW);
 #endif
 }
 

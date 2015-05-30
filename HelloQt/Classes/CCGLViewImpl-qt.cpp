@@ -83,7 +83,10 @@ void QtGLViewImpl::end()
 void QtGLViewImpl::swapBuffers()
 {
   if(m_window)
-        m_window->swapBuffers();
+    {
+      m_window->makeCurrent();
+      m_window->swapBuffers();
+    }
 }
 
 bool QtGLViewImpl::windowShouldClose()
