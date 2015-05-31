@@ -84,6 +84,7 @@ void QtGLViewImpl::swapBuffers()
 {
   if(m_window)
     {
+      //m_window->sendMsgMakeCurrent();
       m_window->makeCurrent();
       m_window->swapBuffers();
     }
@@ -91,7 +92,7 @@ void QtGLViewImpl::swapBuffers()
 
 bool QtGLViewImpl::windowShouldClose()
 {
-        return true;
+        return false;
 }
 
 void QtGLViewImpl::pollEvents()

@@ -31,9 +31,9 @@ int main(int argc, char **argv)
     w.initGLWidget();
     w.show();
 
-    pthread_create(&thread, NULL, thread_func, NULL);
+    //pthread_create(&thread, NULL, thread_func, NULL);
     rc = a.exec();
-    pthread_join(thread, NULL);
+    //pthread_join(thread, NULL);
 
     return rc;
 }

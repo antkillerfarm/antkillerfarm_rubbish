@@ -20,17 +20,19 @@ GLWidget::~GLWidget()
 void GLWidget::initWidget(AppDelegate* app)
 {
   app->initWidget(this);
-  //this->show();
+  this->show();
   //cocos2d::Application::getInstance()->run();
-  //app->initGLContextAttrs();
-  //app->applicationDidFinishLaunching();
+  app->initGLContextAttrs();
+  app->applicationDidFinishLaunching();
+  connect(this, SIGNAL(msgMakeCurrent()),
+	  this, SLOT(onMakeCurrent()), Qt::QueuedConnection);
 }
 
 void GLWidget::paintGL()
 {
 #if 1
-  //auto director = Director::getInstance();
-  //director->mainLoop();
+  auto director = Director::getInstance();
+  director->mainLoop();
   //printf("GLWidget::paintGL\r\n");
 #else
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -69,6 +71,16 @@ void GLWidget::resizeGL(int width, int height)
 #endif
 }
 
+void GLWidget::sendMsgMakeCurrent()
+{
+  emit msgMakeCurrent();
+}
+
+void GLWidget::onMakeCurrent()
+{
+      makeCurrent();
+      swapBuffers();
+}
 
 void GLWidget::setMouseMoveFunc(PTRFUN func)
 {

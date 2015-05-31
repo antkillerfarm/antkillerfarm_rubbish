@@ -31,6 +31,7 @@ public:
     void setMousePressFunc(PTRFUN func);
     void setMouseReleaseFunc(PTRFUN func);
     void setKeyEventFunc(ACCEL_PTRFUN func);
+    void sendMsgMakeCurrent();
 
 protected:
     virtual void mouseMoveEvent(QMouseEvent *event);
@@ -39,8 +40,11 @@ protected:
     virtual void keyPressEvent(QKeyEvent *);
     virtual void keyReleaseEvent(QKeyEvent *);
 
+signals:
+    void msgMakeCurrent();
+
 public slots:
-//    void update();
+    void onMakeCurrent();
 
 private:
     PTRFUN mouseMoveFunc;
