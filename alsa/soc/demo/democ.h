@@ -31,6 +31,7 @@
 #define STATUS0_DAIFMT_MASK (~(7<<1))
 #define STATUS0_SYSCLK_MASK (~(3<<4))
 
+#if 0
 struct uda134x_platform_data {
 	struct l3_pins l3;
 	void (*power) (int);
@@ -52,5 +53,6 @@ struct uda134x_platform_data {
 #define DEMOC_UDA1344 3
 #define DEMOC_UDA1345 4
 };
+#endif
 
 #endif

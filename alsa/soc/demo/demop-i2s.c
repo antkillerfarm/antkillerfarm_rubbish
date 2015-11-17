@@ -23,11 +23,8 @@
 #include <sound/soc.h>
 #include <sound/pcm_params.h>
 
-#include <mach/dma.h>
-
-#include "dma.h"
 #include "demop-i2s.h"
-
+#if 0
 static struct s3c_dma_params demop_i2s_pcm_stereo_out = {
 	.channel	= DMACH_I2S_OUT,
 	.ch_name	= "tx",
@@ -39,7 +36,7 @@ static struct s3c_dma_params demop_i2s_pcm_stereo_in = {
 	.ch_name	= "rx",
 	.dma_size	= 2,
 };
-
+#endif
 struct demop_i2s_info {
 	void __iomem	*regs;
 	struct clk	*iis_clk;
@@ -66,9 +63,6 @@ static void demop_snd_rxctrl(int on)
  */
 static int demop_snd_lrsync(void)
 {
-	u32 iiscon;
-	int timeout = 50; /* 5ms */
-
 	pr_debug("Entered %s\n", __func__);
 
 	return 0;
@@ -222,10 +216,6 @@ static int demop_iis_dev_probe(struct platform_device *pdev)
 		pr_err("failed to register the dai\n");
 		return ret;
 	}
-
-	ret = samsung_asoc_dma_platform_register(&pdev->dev);
-	if (ret)
-		pr_err("failed to register the dma: %d\n", ret);
 
 	return ret;
 }

@@ -1,9 +1,17 @@
-config SND_SOC_SAMSUNG
+menu "SoC Audio for Demo Platform"
+
+config SND_SOC_DEMOP
 	tristate "ASoC support for Demo Platform"
 	help
 	  Say Y or M if you want to add support for codecs attached to
 	  the Demo SoCs' Audio interfaces. You will also need to
 	  select the audio interfaces to support below.
+
+config SND_SOC_DEMOP_DEMOC
+	tristate "SoC I2S Audio support Democ wired to a Demop"
+	select SND_DEMOP_I2S
+	select SND_SOC_DEMOC
+	select SND_SOC_DEMOP
 
 config SND_DEMOP_I2S
 	tristate
@@ -11,7 +19,4 @@ config SND_DEMOP_I2S
 config SND_SOC_DEMOC
        tristate
 
-config SND_SOC_DEMOP_DEMOC
-	tristate "SoC I2S Audio support Democ wired to a Demop"
-	select SND_DEMOP_I2S
-	select SND_SOC_DEMOC
+endmenu

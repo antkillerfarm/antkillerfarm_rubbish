@@ -115,19 +115,6 @@ static void setmode(int v)
 }
 
 /* FIXME - This must be codec platform data but in which board file ?? */
-static struct democ_platform_data demop_democ = {
-	.l3 = {
-		.setdat = setdat,
-		.setclk = setclk,
-		.setmode = setmode,
-		.data_hold = 1,
-		.data_setup = 1,
-		.clock_high = 1,
-		.mode_hold = 1,
-		.mode = 1,
-		.mode_setup = 1,
-	},
-};
 
 static int demop_democ_setup_pin(int pin, char *fun)
 {
@@ -152,7 +139,6 @@ static int demop_democ_probe(struct platform_device *pdev)
 
 	platform_set_drvdata(demop_democ_snd_device,
 			     &snd_soc_demop_democ);
-	platform_device_add_data(demop_democ_snd_device, &demop_democ, sizeof(demop_democ));
 	ret = platform_device_add(demop_democ_snd_device);
 	if (ret) {
 		printk(KERN_ERR "DEMOP_DEMOC SoC Audio: Unable to add\n");
