@@ -52,7 +52,7 @@ static struct snd_pcm_hw_constraint_list hw_constraints_rates = {
 };
 #endif
 
-static struct platform_device *demop_uda134x_snd_device;
+static struct platform_device *demop_democ_snd_device;
 
 static int demop_democ_startup(struct snd_pcm_substream *substream)
 {

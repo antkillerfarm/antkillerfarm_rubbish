@@ -177,11 +177,13 @@ SOC_SINGLE("Double Speed Playback Switch", DEMOC_STATUS1, 2, 1, 0),
 SOC_SINGLE("DC Filter Enable Switch", DEMOC_STATUS0, 0, 1, 0),
 };
 
+#if 0
 /* UDA1341 has the DAC/ADC power down in STATUS1 */
 static const struct snd_soc_dapm_widget democ_dapm_widgets[] = {
 	SND_SOC_DAPM_DAC("DAC", "Playback", DEMOC_STATUS1, 0, 0),
 	SND_SOC_DAPM_ADC("ADC", "Capture", DEMOC_STATUS1, 1, 0),
 };
+#endif
 
 /* Common DAPM widgets */
 static const struct snd_soc_dapm_widget democ_dapm_widgets[] = {
@@ -235,93 +237,8 @@ static struct snd_soc_dai_driver democ_dai = {
 
 static int democ_soc_probe(struct snd_soc_codec *codec)
 {
-	struct democ_priv *democ;
-	struct democ_platform_data *pd = codec->component.card->dev->platform_data;
-	const struct snd_soc_dapm_widget *widgets;
-	unsigned num_widgets;
-
-	int ret;
 
 	printk(KERN_INFO "DEMOC SoC Audio Codec\n");
-
-	if (!pd) {
-		printk(KERN_ERR "DEMOC SoC codec: "
-		       "missing L3 bitbang function\n");
-		return -ENODEV;
-	}
-
-	switch (pd->model) {
-	case DEMOC_UDA1340:
-	case DEMOC_UDA1341:
-	case DEMOC_UDA1344:
-	case DEMOC_UDA1345:
-		break;
-	default:
-		printk(KERN_ERR "DEMOC SoC codec: "
-		       "unsupported model %d\n",
-			pd->model);
-		return -EINVAL;
-	}
-
-	democ = kzalloc(sizeof(struct democ_priv), GFP_KERNEL);
-	if (democ == NULL)
-		return -ENOMEM;
-	snd_soc_codec_set_drvdata(codec, democ);
-
-	codec->control_data = pd;
-
-	if (pd->power)
-		pd->power(1);
-
-	democ_reset(codec);
-
-	if (pd->is_powered_on_standby)
-		democ_set_bias_level(codec, SND_SOC_BIAS_ON);
-	else
-		democ_set_bias_level(codec, SND_SOC_BIAS_STANDBY);
-
-	if (pd->model == DEMOC_UDA1341) {
-		widgets = uda1341_dapm_widgets;
-		num_widgets = ARRAY_SIZE(uda1341_dapm_widgets);
-	} else {
-		widgets = uda1340_dapm_widgets;
-		num_widgets = ARRAY_SIZE(uda1340_dapm_widgets);
-	}
-
-	ret = snd_soc_dapm_new_controls(&codec->dapm, widgets, num_widgets);
-	if (ret) {
-		printk(KERN_ERR "%s failed to register dapm controls: %d",
-			__func__, ret);
-		kfree(democ);
-		return ret;
-	}
-
-	switch (pd->model) {
-	case DEMOC_UDA1340:
-	case DEMOC_UDA1344:
-		ret = snd_soc_add_codec_controls(codec, uda1340_snd_controls,
-					ARRAY_SIZE(uda1340_snd_controls));
-	break;
-	case DEMOC_UDA1341:
-		ret = snd_soc_add_codec_controls(codec, uda1341_snd_controls,
-					ARRAY_SIZE(uda1341_snd_controls));
-	break;
-	case DEMOC_UDA1345:
-		ret = snd_soc_add_codec_controls(codec, uda1345_snd_controls,
-					ARRAY_SIZE(uda1345_snd_controls));
-	break;
-	default:
-		printk(KERN_ERR "%s unknown codec type: %d",
-			__func__, pd->model);
-		kfree(democ);
-		return -EINVAL;
-	}
-
-	if (ret < 0) {
-		printk(KERN_ERR "DEMOC: failed to register controls\n");
-		kfree(democ);
-		return ret;
-	}
 
 	return 0;
 }
@@ -329,9 +246,9 @@ static int democ_soc_probe(struct snd_soc_codec *codec)
 /* power down chip */
 static int democ_soc_remove(struct snd_soc_codec *codec)
 {
-	struct democ_priv *democ = snd_soc_codec_get_drvdata(codec);
+  //struct democ_priv *democ = snd_soc_codec_get_drvdata(codec);
 
-	kfree(democ);
+  //kfree(democ);
 	return 0;
 }
 
