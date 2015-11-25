@@ -1,17 +1,3 @@
-/*
- * uda134x.c  --  UDA134X ALSA SoC Codec driver
- *
- * Modifications by Christian Pellegrin <chripell@evolware.org>
- *
- * Copyright 2007 Dension Audio Systems Ltd.
- * Author: Zoltan Devai
- *
- * Based on the WM87xx drivers by Liam Girdwood and Richard Purdie
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 2 as
- * published by the Free Software Foundation.
- */
 
 #include <linux/module.h>
 #include <linux/delay.h>
@@ -25,6 +11,7 @@
 
 #include "democ.h"
 
+#define pr_debug(format, ...) printk(KERN_INFO format, ## __VA_ARGS__)
 
 #define DEMOC_RATES SNDRV_PCM_RATE_8000_48000
 #define DEMOC_FORMATS (SNDRV_PCM_FMTBIT_S8 | SNDRV_PCM_FMTBIT_S16_LE | \
@@ -291,6 +278,7 @@ static struct snd_soc_codec_driver soc_codec_dev_democ = {
 
 static int democ_codec_probe(struct platform_device *pdev)
 {
+	pr_debug("Entered %s\n", __func__);
 	return snd_soc_register_codec(&pdev->dev,
 			&soc_codec_dev_democ, &democ_dai, 1);
 }

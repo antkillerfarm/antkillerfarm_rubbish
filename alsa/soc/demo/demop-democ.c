@@ -1,15 +1,3 @@
-/*
- * Modifications by Christian Pellegrin <chripell@evolware.org>
- *
- * s3c24xx_uda134x.c  --  S3C24XX_UDA134X ALSA SoC Audio board driver
- *
- * Copyright 2007 Dension Audio Systems Ltd.
- * Author: Zoltan Devai
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 2 as
- * published by the Free Software Foundation.
- */
 
 #include <linux/clk.h>
 #include <linux/gpio.h>
@@ -20,19 +8,9 @@
 
 #include "demop-i2s.h"
 
+#define pr_debug(format, ...) printk(KERN_INFO format, ## __VA_ARGS__)
+
 /* #define ENFORCE_RATES 1 */
-/*
-  Unfortunately the DEMOP in master mode has a limited capacity of
-  generating the clock for the codec. If you define this only rates
-  that are really available will be enforced. But be careful, most
-  user level application just want the usual sampling frequencies (8,
-  11.025, 22.050, 44.1 kHz) and anyway resampling is a costly
-  operation for embedded systems. So if you aren't very lucky or your
-  hardware engineer wasn't very forward-looking it's better to leave
-  this undefined. If you do so an approximate value for the requested
-  sampling rate in the range -/+ 5% will be chosen. If this in not
-  possible an error will be returned.
-*/
 
 static struct clk *xtal;
 static struct clk *pclk;
@@ -161,13 +139,72 @@ static struct platform_driver demop_democ_driver = {
 	.probe  = demop_democ_probe,
 	.remove = demop_democ_remove,
 	.driver = {
-		.name = "demop_democ",
+		.name = "demop-democ",
 		.owner = THIS_MODULE,
 	},
 };
 
-module_platform_driver(demop_democ_driver);
+//module_platform_driver(demop_democ_driver);
 
-MODULE_AUTHOR("Zoltan Devai, Christian Pellegrin <chripell@evolware.org>");
+struct platform_device demop_device_iis = {
+	.name		= "demop-iis",
+	.id		= -1,
+};
+
+struct platform_device demop_codec = {
+	.name		= "democ-codec",
+	.id		= -1,
+};
+
+struct platform_device demop_audio = {
+	.name		= "demop-democ",
+	.id		= -1,
+};
+
+static struct platform_device *demop_devices[] __initdata = {
+	&demop_device_iis,
+	&demop_codec,
+	&demop_audio,
+};
+
+static int __init demop_democ_driver_init(void)
+{
+#if 0
+	int ret;
+	unsigned short ipsel;
+
+	/* enable both AC97 controllers in pinmux reg */
+	ipsel = __raw_readw(IPSEL);
+	__raw_writew(ipsel | (3 << 10), IPSEL);
+
+	ret = -ENOMEM;
+	sh7760_ac97_snd_device = platform_device_alloc("soc-audio", -1);
+	if (!sh7760_ac97_snd_device)
+		goto out;
+
+	platform_set_drvdata(sh7760_ac97_snd_device,
+			     &sh7760_ac97_soc_machine);
+	ret = platform_device_add(sh7760_ac97_snd_device);
+
+	if (ret)
+		platform_device_put(sh7760_ac97_snd_device);
+
+out:
+	return ret;
+#endif
+	platform_add_devices(demop_devices, ARRAY_SIZE(demop_devices));
+	return platform_driver_register(&demop_democ_driver);
+}
+
+static void __exit demop_democ_driver_exit(void)
+{
+	//platform_device_unregister(sh7760_ac97_snd_device);
+        platform_driver_unregister(&demop_democ_driver);
+}
+
+module_init(demop_democ_driver_init);
+module_exit(demop_democ_driver_exit);
+
+MODULE_AUTHOR("Antkillerfarm");
 MODULE_DESCRIPTION("DEMOP_DEMOC ALSA SoC audio driver");
 MODULE_LICENSE("GPL");

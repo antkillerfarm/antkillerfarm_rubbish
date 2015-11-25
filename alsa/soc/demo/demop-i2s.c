@@ -1,18 +1,3 @@
-/*
- * s3c24xx-i2s.c  --  ALSA Soc Audio Layer
- *
- * (c) 2006 Wolfson Microelectronics PLC.
- * Graeme Gregory graeme.gregory@wolfsonmicro.com or linux@wolfsonmicro.com
- *
- * Copyright 2004-2005 Simtec Electronics
- *	http://armlinux.simtec.co.uk/
- *	Ben Dooks <ben@simtec.co.uk>
- *
- *  This program is free software; you can redistribute  it and/or modify it
- *  under  the terms of  the GNU General  Public License as published by the
- *  Free Software Foundation;  either version 2 of the  License, or (at your
- *  option) any later version.
- */
 
 #include <linux/delay.h>
 #include <linux/clk.h>
@@ -24,6 +9,9 @@
 #include <sound/pcm_params.h>
 
 #include "demop-i2s.h"
+
+#define pr_debug(format, ...) printk(KERN_INFO format, ## __VA_ARGS__)
+
 #if 0
 static struct s3c_dma_params demop_i2s_pcm_stereo_out = {
 	.channel	= DMACH_I2S_OUT,
@@ -204,11 +192,13 @@ static int demop_iis_dev_probe(struct platform_device *pdev)
 	int ret = 0;
 	struct resource *res;
 
-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	pr_debug("Entered %s\n", __func__);
+
+	/*res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
 	if (!res) {
 		dev_err(&pdev->dev, "Can't get IO resource.\n");
 		return -ENOENT;
-	}
+		}*/
 
 	ret = devm_snd_soc_register_component(&pdev->dev,
 			&demop_i2s_component, &demop_i2s_dai, 1);
@@ -231,7 +221,7 @@ static struct platform_driver demop_iis_driver = {
 module_platform_driver(demop_iis_driver);
 
 /* Module information */
-MODULE_AUTHOR("Ben Dooks, <ben@simtec.co.uk>");
+MODULE_AUTHOR("Antkillerfarm");
 MODULE_DESCRIPTION("demop I2S SoC Interface");
 MODULE_LICENSE("GPL");
 MODULE_ALIAS("platform:demop-iis");
