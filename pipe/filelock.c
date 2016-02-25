@@ -2,12 +2,12 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-void main()
+int main(int argc, char *argv[])
 { 
   FILE *fp = NULL;
   int i = 20;
 
-  if (access("file_lock.test",F_OK) != 0) 
+  if (access("file_lock.test", F_OK) != 0) 
     {
       creat("file_lock.test", 0777);
     }
