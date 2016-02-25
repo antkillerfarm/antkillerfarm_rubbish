@@ -10,7 +10,7 @@ AM_INIT_AUTOMAKE([1.8 dist-bzip2 no-dist-gzip check-news])
 # Checks for programs.
 AC_PROG_CC
 
-AC_CHECK_HEADERS(unistd.h)
+AC_CHECK_HEADERS(unistd.h fcntl.h)
 
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT

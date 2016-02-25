@@ -1,0 +1,12 @@
+# readpipe.c & writepipe.c
+
+the demo for naming pipe.
+
+# filelock.c
+
+the demo for file lock.
+
+1.Open a terminal, and run `filelock`.
+
+2.During 20s after Step 1, open another terminal, and run `filelock`.
+
