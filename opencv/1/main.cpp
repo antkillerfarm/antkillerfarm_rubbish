@@ -21,14 +21,20 @@ int main()
 	merge(channels0,img0);
 
 #if 0
-	cout << hex << img.at<int>(0,0) << endl;
-	cout << hex << img.at<int>(0,1) << endl << endl;
-	cout << hex << channels[0].at<int>(0,0) << endl;
-	cout << hex << channels[1].at<int>(0,0) << endl;
-	cout << hex << channels[2].at<int>(0,0) << endl;
+	Size size = img.size();
+	cout << "Mat Size:" << hex << size.width << ", " << size.height << endl;
 #endif
 
 #if 1
+	cout << hex << static_cast<int>(img.at<Vec3b>(0,0)[0]) << " ";
+	cout << hex << static_cast<int>(img.at<Vec3b>(0,0)[1]) << " ";
+	cout << hex << static_cast<int>(img.at<Vec3b>(0,0)[2]) << endl;
+	cout << hex << static_cast<int>(channels[0].at<uchar>(0,0)) << endl;
+	cout << hex << static_cast<int>(channels[1].at<uchar>(0,0)) << endl;
+	cout << hex << static_cast<int>(channels[2].at<uchar>(0,0)) << endl;
+#endif
+
+#if 0
 	namedWindow("Picture1");  
 	imshow("Picture1", img);
 	moveWindow("Picture1", 0, 0);
