@@ -10,7 +10,7 @@ int main()
 	vector<Mat> channels0;
 	vector<Mat>::iterator it;
 
-	Mat img = imread("../1.jpeg");
+	Mat img = imread("../../img/1.jpeg");
 	Mat img0;
 
 	split(img,channels);
