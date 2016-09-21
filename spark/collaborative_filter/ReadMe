@@ -1,0 +1,7 @@
+# Compile
+
+`mvn package`
+
+# Exec
+
+`bin/spark-submit --class "oata.JZCollaborativeFilter" --master local[4] JZCollaborativeFilter-1.0.jar`
