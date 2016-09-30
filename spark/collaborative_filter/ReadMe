@@ -1,6 +1,6 @@
 # Compile
 
-`mvn package`
+`mvn package -DcompilerArgument=-Xlint:deprecation`
 
 # Exec
 

@@ -8,6 +8,9 @@ import org.apache.spark.mllib.recommendation.ALS;
 import org.apache.spark.mllib.recommendation.MatrixFactorizationModel;
 import org.apache.spark.mllib.recommendation.Rating;
 import org.apache.spark.SparkConf;
+import org.apache.spark.sql.SparkSession;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
 
 public class JZCollaborativeFilter {
     public static void main(String[] args) {
@@ -15,7 +18,7 @@ public class JZCollaborativeFilter {
 	test2();
     }
     public static void test1() {
-        System.out.println("Hello World");
+        /*System.out.println("Hello World");
 	String logFile = "../data/test/1.txt"; // Should be some file on your system
 	SparkConf conf = new SparkConf().setAppName("Simple Application");
 	JavaSparkContext sc = new JavaSparkContext(conf);
@@ -29,17 +32,27 @@ public class JZCollaborativeFilter {
 		public Boolean call(String s) { return s.contains("b"); }
 	    }).count();
 
-	System.out.println("Lines with a: " + numAs + ", lines with b: " + numBs);
+	    System.out.println("Lines with a: " + numAs + ", lines with b: " + numBs);*/
     }
     public static void test2() {
 	SparkConf conf = new SparkConf().setAppName("Java Collaborative Filtering Example0");
-	JavaSparkContext jsc = new JavaSparkContext(conf);
+
 	// Load and parse the data
 	String path = "../data/test/user_log_format1_0.csv";
-	JavaRDD<String> data = jsc.textFile(path);
+	SparkSession session = SparkSession.builder().config(conf).getOrCreate();
+	Dataset<Row> df = session.read()
+                .format("com.databricks.spark.csv")
+                .option("inferSchema", "true")
+                .option("header", "true")
+                .load(path);
+	//Dataset<Row> df = session.read().csv(path);
+        df.printSchema();
+	System.out.println("Rows = " + df.count());
+	
+	
     }
     public static void test3() {
-	SparkConf conf = new SparkConf().setAppName("Java Collaborative Filtering Example");
+	/*SparkConf conf = new SparkConf().setAppName("Java Collaborative Filtering Example");
 	JavaSparkContext jsc = new JavaSparkContext(conf);
 
 	// Load and parse the data
@@ -98,6 +111,6 @@ public class JZCollaborativeFilter {
 	// Save and load model
 	model.save(jsc.sc(), "target/tmp/myCollaborativeFilter");
 	MatrixFactorizationModel sameModel =
-	    MatrixFactorizationModel.load(jsc.sc(),"target/tmp/myCollaborativeFilter");
+	MatrixFactorizationModel.load(jsc.sc(),"target/tmp/myCollaborativeFilter");*/
     }
 }
