@@ -2,6 +2,8 @@
 
 `mvn package -DcompilerArgument=-Xlint:deprecation`
 
+`cp ./target/JZCollaborativeFilter-1.0.jar <spark path>`
+
 # Exec
 
 `bin/spark-submit --class "oata.JZCollaborativeFilter" --master local[4] JZCollaborativeFilter-1.0.jar`
