@@ -1,0 +1,7 @@
+# Compile
+
+`mvn jfx:jar`
+
+# Exec
+
+`mvn jfx:run`
