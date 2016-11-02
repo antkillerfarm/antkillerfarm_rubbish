@@ -1,0 +1,14 @@
+apply plugin: 'groovy'
+apply plugin: 'application'
+
+mainClassName = 'helloworld.HelloWorldFx'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    compile 'org.codehaus.groovy:groovy:2.3.6'
+}
+
