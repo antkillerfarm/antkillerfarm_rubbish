@@ -1,0 +1,16 @@
+SRC=$(wildcard ./*.cpp)
+OBJS=$(patsubst %.cpp,%.o,$(SRC))
+
+TARGET = hello
+LIBVAR = `pkg-config opencv --libs`
+CFLAGS=-Wall -std=c++0x -fpermissive `pkg-config opencv --cflags`
+
+
+$(TARGET):$(OBJS)
+	$(CXX) $(LFLAGS) -o $(TARGET) $(OBJS) $(LIBVAR)
+
+$(OBJS):$(SRC)
+	$(CXX) $(CFLAGS) $(INCPATH) -c $^
+
+clean:
+	rm $(OBJS) $(TARGET)
