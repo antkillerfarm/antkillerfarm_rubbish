@@ -4,8 +4,8 @@ import subprocess
 def myconvert():
   exe_path = ""
   exe_name = "convert"
-  img_path = "/media/tangjing/新加卷/information/myinf/pic/2020/pic/"
-  des_path = "/media/tangjing/新加卷/information/myinf/pic/2020/pic2/"
+  img_path = "/media/information/myinf/pic/2020/pic/"
+  des_path = "/media/information/myinf/pic/2020/pic2/"
   for img_file in os.listdir(img_path):
     cmd_line = "%s %s -resize 50%% %s" % (exe_path + exe_name,
                                         img_path + img_file,

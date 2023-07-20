@@ -11,7 +11,7 @@ class PlaybackInterface:
         self.ispaused = False
 
         # A free example sound track
-        self.uri = "file:///home/tj/my/crazy/python/2012.mp3"
+        self.uri = "file:///my/crazy/python/2012.mp3"
 
         # GTK window and widgets
         self.window = Gtk.Window()
