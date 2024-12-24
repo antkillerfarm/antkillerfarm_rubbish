@@ -5,7 +5,7 @@
 #include <string.h>
 
 #define TEST_INPUT_NUM 80
-#define THREAD_NUM 1
+#define THREAD_NUM 2
 #define BUCKET_WIDTH 8
 #define BUCKET_SIZE (1 << BUCKET_WIDTH)
 
@@ -20,6 +20,7 @@ float input[TEST_INPUT_NUM] = {
     79.415,  -13.906, -61.225, -24.768, -96.095, -88.033, 12.208,  36.603,
     80.426,  -15.617, -28.778, 35.831,  42.338,  -19.250, 89.067,  -44.727,
     80.168,  -77.544, -60.959, -78.450, -74.932, 20.722,  -22.494, 55.845};
+
 float output[TEST_INPUT_NUM];
 int32_t indices_ptr_out[TEST_INPUT_NUM];
 
@@ -39,14 +40,13 @@ template <typename _T> struct Unsigned_Bits {
   static constexpr _T LOWEST_KEY = _T(-1);
   static constexpr _T MAX_KEY = _T(-1) ^ HIGH_BIT;
 
+  template <bool is_descend>
   static _T GetKeyForRadixSortBase(_T key) {
     _T mask = (key & HIGH_BIT) ? _T(-1) : HIGH_BIT;
+    if (is_descend) {
+      return ~(key ^ mask);
+    }
     return key ^ mask;
-  };
-
-  static _T GetKeyForRadixSortBaseDescend(_T key) {
-    _T mask = (key & HIGH_BIT) ? _T(-1) : HIGH_BIT;
-    return ~(key ^ mask);
   };
 
   static int32_t BitfieldExtract(_T source, int32_t bit_start,
@@ -57,14 +57,10 @@ template <typename _T> struct Unsigned_Bits {
 };
 
 template <typename _T, typename UB_T> struct Float_Point_NumberBase {
+  template <bool is_descend> 
   static UB_T GetKeyForRadixSort(_T key) {
     UB_T key_in = *((UB_T *)&key);
-    return Unsigned_Bits<UB_T>::GetKeyForRadixSortBase(key_in);
-  };
-
-  static UB_T GetKeyForRadixSortDescend(_T key) {
-    UB_T key_in = *((UB_T *)&key);
-    return Unsigned_Bits<UB_T>::GetKeyForRadixSortBaseDescend(key_in);
+    return Unsigned_Bits<UB_T>::template GetKeyForRadixSortBase<is_descend>(key_in);
   };
 };
 
@@ -73,12 +69,12 @@ template <typename _T> struct Float_Point_Number;
 template <>
 struct Float_Point_Number<float> : Float_Point_NumberBase<float, int32_t> {};
 
-template <typename KeyT, typename ValueT>
+template <typename KeyT, typename ValueT, bool is_descend>
 void prepare_keys(const ValueT *d_values_in, KeyT *d_keys_in,
                   int32_t num_items) {
   for (int32_t i = 0; i < num_items; i++) {
     d_keys_in[i] =
-        Float_Point_Number<ValueT>::GetKeyForRadixSortDescend(d_values_in[i]);
+        Float_Point_Number<ValueT>::template GetKeyForRadixSort<is_descend>(d_values_in[i]);
   }
 }
 
@@ -141,11 +137,11 @@ void post_process(const ValueT *d_values_in, ValueT *d_values_out,
     }
 }
 
-template <typename KeyT, typename ValueT>
+template <typename KeyT, typename ValueT, bool is_descend>
 void sort_pairs(const ValueT *d_values_in, ValueT *d_values_out,
                 int32_t *indices_ptr, int32_t num_items) {
   int32_t loop_count = sizeof(KeyT) * 8 / BUCKET_WIDTH;
-  prepare_keys(d_values_in, keys, num_items);
+  prepare_keys<KeyT, ValueT, is_descend>(d_values_in, keys, num_items);
   prepare_indices(indices[0], num_items);
   for (int32_t i = 0; i < loop_count; i++) {
     int32_t begin_bit = (i) * BUCKET_WIDTH;
@@ -157,14 +153,14 @@ void sort_pairs(const ValueT *d_values_in, ValueT *d_values_out,
 }
 
 void test_key() {
-  auto key = Float_Point_Number<float>::GetKeyForRadixSort(20000.5);
+  auto key = Float_Point_Number<float>::GetKeyForRadixSort<false>(20000.5);
   auto bfe = Unsigned_Bits<int32_t>::BitfieldExtract(key, 16, 8);
   printf("A 0x%x\n", key);
   printf("B 0x%x\n", bfe);
 }
 
 void test_sort() {
-  sort_pairs<int32_t, float>(input, output, indices_ptr_out, TEST_INPUT_NUM);
+  sort_pairs<int32_t, float, false>(input, output, indices_ptr_out, TEST_INPUT_NUM);
 }
 
 int main() {
