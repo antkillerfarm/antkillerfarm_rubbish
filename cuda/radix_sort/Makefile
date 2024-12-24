@@ -1,4 +1,7 @@
-all: sort_cpu sort_cpu_mt
+all: sort_cpu sort_cpu_mt sort_gpu
+
+sort_gpu: sort_gpu.cu
+	/usr/local/cuda/bin/nvcc -o $@ $^
 
 sort_cpu_mt: sort_cpu_mt.cpp
 	clang -g -O0 -o $@ $^
