@@ -1,9 +1,9 @@
+#include "sort_gpu.cuh"
 #include <limits>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "sort_gpu.cuh"
 
 float input[TEST_INPUT_NUM] = {
     -55.795, -42.349, 79.255,  5.941,   96.018,  31.294,  -96.905, 53.291,
@@ -33,27 +33,23 @@ int32_t exclusive_cumsum[BUCKET_SIZE][THREAD_NUM] = {0};
 int32_t indices[2][TEST_INPUT_NUM];
 #endif
 
-__global__ void prepare_indices(int32_t *indices, int32_t num_items) {
+__global__ void put_numbers_into_bucket(const int32_t *d_keys_in,
+                                        int32_t *offset, int32_t *bucket_offset,
+                                        int32_t num_items) {
   int block_size =
-      num_items + (blockDim.x * gridDim.x) - 1 / (blockDim.x * gridDim.x);
+      (num_items + (blockDim.x * gridDim.x) - 1) / (blockDim.x * gridDim.x);
   for (int32_t i = 0; i < block_size; i++) {
-    int idx = (blockIdx.x * blockDim.x + threadIdx.x) * block_size + i;
+    int32_t idx = i + (blockIdx.x * blockDim.x + threadIdx.x) * block_size;
     if (idx < num_items) {
-      indices[idx] = idx;
+      int32_t idx0 = d_keys_in[idx] * (blockDim.x * gridDim.x) +
+                     blockIdx.x * blockDim.x + threadIdx.x;
+      offset[idx] = bucket_offset[idx0];
+      bucket_offset[idx0]++;
     }
   }
 }
 
 #if 0
-template <typename KeyT>
-void extract_keys(KeyT *d_keys_in, KeyT *d_keys_out, int32_t *indices,
-                  int32_t num_items, int32_t bit_start, int32_t num_bits) {
-  for (int32_t i = 0; i < num_items; i++) {
-    d_keys_out[i] = Unsigned_Bits<KeyT>::BitfieldExtract(d_keys_in[indices[i]],
-                                                         bit_start, num_bits);
-  }
-}
-
 void calc_exclusive_cumsum(const int32_t *value_in, int32_t *exclusive_cumsum,
                            int32_t num_items) {
   int32_t sum;
@@ -174,7 +170,9 @@ int main() {
   // test_key<<<1, 2>>>();
   // test_sort();
   // test_prepare_keys();
-  test_prepare_indices();
+  // test_prepare_indices();
+  // test_extract_keys();
+  test_put_numbers_into_bucket();
   cudaDeviceSynchronize();
   return 0;
 }

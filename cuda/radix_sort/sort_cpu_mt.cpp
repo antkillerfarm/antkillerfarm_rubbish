@@ -13,34 +13,39 @@
 using half_float::half;
 using namespace half_float::literal;
 
-using DType = half;
-using KType = int16_t;
+// using DType = half;
+// using KType = int16_t;
+using DType = float;
+using KType = int32_t;
 
-// float input[TEST_INPUT_NUM] = {
-//     -55.795, -42.349, 79.255,  5.941,   96.018,  31.294,  -96.905, 53.291,
-//     -90.021, -11.393, 57.446,  41.810,  25.299,  98.622,  37.640,  -11.657,
-//     55.496,  45.014,  97.440,  -65.244, 20.372,  -40.049, 57.645,  -16.184,
-//     -95.877, -94.809, 64.730,  -60.664, -44.394, 51.183,  48.071,  -84.458,
-//     30.944,  -42.142, 7.816,   -22.595, -89.318, -6.443,  42.550,  81.024,
-//     53.816,  80.649,  76.768,  71.688,  -25.017, -36.421, 37.996,  70.614,
-//     -73.219, 38.254,  -58.320, -4.735,  -54.836, -94.747, -36.710, 98.710,
-//     79.415,  -13.906, -61.225, -24.768, -96.095, -88.033, 12.208,  36.603,
-//     80.426,  -15.617, -28.778, 35.831,  42.338,  -19.250, 89.067,  -44.727,
-//     80.168,  -77.544, -60.959, -78.450, -74.932, 20.722,  -22.494, 55.845};
+float input[TEST_INPUT_NUM] = {
+    -55.795, -42.349, 79.255,  5.941,   96.018,  31.294,  -96.905, 53.291,
+    -90.021, -11.393, 57.446,  41.810,  25.299,  98.622,  37.640,  -11.657,
+    55.496,  45.014,  97.440,  -65.244, 20.372,  -40.049, 57.645,  -16.184,
+    -95.877, -94.809, 64.730,  -60.664, -44.394, 51.183,  48.071,  -84.458,
+    30.944,  -42.142, 7.816,   -22.595, -89.318, -6.443,  42.550,  81.024,
+    53.816,  80.649,  76.768,  71.688,  -25.017, -36.421, 37.996,  70.614,
+    -73.219, 38.254,  -58.320, -4.735,  -54.836, -94.747, -36.710, 98.710,
+    79.415,  -13.906, -61.225, -24.768, -96.095, -88.033, 12.208,  36.603,
+    80.426,  -15.617, -28.778, 35.831,  42.338,  -19.250, 89.067,  -44.727,
+    80.168,  -77.544, -60.959, -78.450, -74.932, 20.722,  -22.494, 55.845};
 
-half input[TEST_INPUT_NUM] = {
-    73.561_h,  43.725_h,  -19.391_h, -35.444_h, 84.709_h,  46.380_h,  -45.529_h,
-    83.674_h,  -91.422_h, 65.276_h,  91.310_h,  58.979_h,  -20.822_h, 45.184_h,
-    13.943_h,  -40.147_h, -95.098_h, -9.922_h,  -88.527_h, -36.335_h, -9.820_h,
-    78.846_h,  18.892_h,  23.346_h,  59.521_h,  -79.604_h, 82.738_h,  71.176_h,
-    64.105_h,  -38.500_h, -33.920_h, -71.161_h, -75.104_h, -24.361_h, -32.468_h,
-    41.793_h,  85.418_h,  -38.965_h, 80.583_h,  92.184_h,  20.046_h,  -19.807_h,
-    -16.370_h, -63.294_h, -14.729_h, -70.273_h, -11.686_h, -59.074_h, 74.355_h,
-    20.759_h,  -48.987_h, 82.671_h,  31.011_h,  56.022_h,  -13.305_h, 1.438_h,
-    34.484_h,  14.673_h,  -64.752_h, 5.972_h,   60.900_h,  33.005_h,  46.021_h,
-    -54.705_h, 69.876_h,  21.417_h,  -99.893_h, 8.749_h,   -23.831_h, 50.995_h,
-    -66.454_h, -31.685_h, 96.555_h,  24.891_h,  -78.219_h, 44.638_h,  17.146_h,
-    60.752_h,  79.542_h,  53.528_h};
+// half input[TEST_INPUT_NUM] = {
+//     73.561_h,  43.725_h,  -19.391_h, -35.444_h, 84.709_h,  46.380_h,
+//     -45.529_h, 83.674_h,  -91.422_h, 65.276_h,  91.310_h,  58.979_h,
+//     -20.822_h, 45.184_h, 13.943_h,  -40.147_h, -95.098_h, -9.922_h,
+//     -88.527_h, -36.335_h, -9.820_h,
+//     78.846_h,  18.892_h,  23.346_h,  59.521_h,
+//     -79.604_h, 82.738_h,  71.176_h, 64.105_h,  -38.500_h, -33.920_h,
+//     -71.161_h, -75.104_h, -24.361_h, -32.468_h, 41.793_h,  85.418_h,
+//     -38.965_h, 80.583_h,  92.184_h,  20.046_h,  -19.807_h, -16.370_h,
+//     -63.294_h, -14.729_h, -70.273_h, -11.686_h, -59.074_h, 74.355_h,
+//     20.759_h,  -48.987_h, 82.671_h,  31.011_h,  56.022_h, -13.305_h, 1.438_h,
+//     34.484_h,  14.673_h,
+//     -64.752_h, 5.972_h,   60.900_h,  33.005_h,  46.021_h,
+//     -54.705_h, 69.876_h,  21.417_h,  -99.893_h, 8.749_h, -23.831_h, 50.995_h,
+//     -66.454_h, -31.685_h, 96.555_h,  24.891_h,
+//     -78.219_h, 44.638_h,  17.146_h, 60.752_h,  79.542_h,  53.528_h};
 
 DType output[TEST_INPUT_NUM];
 int32_t indices_ptr_out[TEST_INPUT_NUM];
@@ -51,8 +56,8 @@ KType bfe_keys_out[TEST_INPUT_NUM] = {0};
 int32_t offset[TEST_INPUT_NUM] = {0};
 // int32_t bucket_offset[BUCKET_SIZE] = {0};
 // int32_t curr_count[THREAD_NUM] = {0};
-int32_t bucket_offset[BUCKET_SIZE][THREAD_NUM] = {0};
-int32_t exclusive_cumsum[BUCKET_SIZE][THREAD_NUM] = {0};
+int32_t bucket_offset[BUCKET_SIZE * THREAD_NUM] = {0};
+int32_t exclusive_cumsum[BUCKET_SIZE * THREAD_NUM] = {0};
 // int32_t exclusive_cumsum[BUCKET_SIZE] = {0};
 int32_t indices[2][TEST_INPUT_NUM];
 
@@ -137,24 +142,34 @@ void update_indices_ptr(const KType *d_keys_in, const int32_t *indices_ptr_in,
   for (int32_t i = 0; i < THREAD_NUM; i++) {
     for (int32_t j = 0; j < num_items_per_thread; j++) {
       int32_t idx0 = j + i * num_items_per_thread;
-      int32_t idx =
-          offset[idx0] + exclusive_cumsum[d_keys_in[idx0] * THREAD_NUM + i];
-      indices_ptr_out[idx] = indices_ptr_in[idx0];
-      bfe_keys_out[idx] = bfe_keys[idx0];
+      if (idx0 < num_items) {
+        int32_t idx =
+            offset[idx0] + exclusive_cumsum[d_keys_in[idx0] * THREAD_NUM + i];
+        indices_ptr_out[idx] = indices_ptr_in[idx0];
+        bfe_keys_out[idx] = bfe_keys[idx0];
+      }
     }
   }
 }
 
-void sort_pairs_loop(const KType *d_keys_in, int32_t *indices_ptr_in,
-                     int32_t *indices_ptr_out, int32_t num_items) {
+void put_numbers_into_bucket(const int32_t *d_keys_in, int32_t *offset,
+                             int32_t *bucket_offset, int32_t num_items) {
   int32_t num_items_per_thread = num_items / THREAD_NUM;
   for (int32_t i = 0; i < THREAD_NUM; i++) {
     for (int32_t j = 0; j < num_items_per_thread; j++) {
       int32_t idx = j + i * num_items_per_thread;
-      offset[idx] = bucket_offset[d_keys_in[idx]][i];
-      bucket_offset[d_keys_in[idx]][i]++;
+      if (idx < num_items) {
+        offset[idx] = bucket_offset[d_keys_in[idx] * THREAD_NUM + i];
+        bucket_offset[d_keys_in[idx] * THREAD_NUM + i]++;
+      }
     }
   }
+}
+
+void sort_pairs_loop(const int32_t *d_keys_in, int32_t *indices_ptr_in,
+                     int32_t *indices_ptr_out, int32_t num_items) {
+  put_numbers_into_bucket(d_keys_in, offset, bucket_offset, num_items);
+
   calc_exclusive_cumsum((int32_t *)bucket_offset, (int32_t *)exclusive_cumsum,
                         BUCKET_SIZE * THREAD_NUM);
   update_indices_ptr(d_keys_in, indices_ptr_in, offset,
