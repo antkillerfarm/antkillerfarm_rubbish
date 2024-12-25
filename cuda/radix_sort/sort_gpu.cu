@@ -3,11 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#define TEST_INPUT_NUM 80
-#define THREAD_NUM 2
-#define BUCKET_WIDTH 8
-#define BUCKET_SIZE (1 << BUCKET_WIDTH)
+#include "sort_gpu.cuh"
 
 float input[TEST_INPUT_NUM] = {
     -55.795, -42.349, 79.255,  5.941,   96.018,  31.294,  -96.905, 53.291,
@@ -37,59 +33,18 @@ int32_t exclusive_cumsum[BUCKET_SIZE][THREAD_NUM] = {0};
 int32_t indices[2][TEST_INPUT_NUM];
 #endif
 
-template <typename _T> struct Unsigned_Bits {
-  static constexpr _T HIGH_BIT = _T(1) << ((sizeof(_T) * 8) - 1);
-  static constexpr _T LOWEST_KEY = _T(-1);
-  static constexpr _T MAX_KEY = _T(-1) ^ HIGH_BIT;
-
-  template <bool is_descend>
-  static __host__ __device__ _T GetKeyForRadixSortBase(_T key) {
-    _T mask = (key & HIGH_BIT) ? _T(-1) : HIGH_BIT;
-    if (is_descend) {
-      return ~(key ^ mask);
+__global__ void prepare_indices(int32_t *indices, int32_t num_items) {
+  int block_size =
+      num_items + (blockDim.x * gridDim.x) - 1 / (blockDim.x * gridDim.x);
+  for (int32_t i = 0; i < block_size; i++) {
+    int idx = (blockIdx.x * blockDim.x + threadIdx.x) * block_size + i;
+    if (idx < num_items) {
+      indices[idx] = idx;
     }
-    return key ^ mask;
-  };
-
-  static __host__ __device__ int32_t BitfieldExtract(_T source,
-                                                     int32_t bit_start,
-                                                     int32_t num_bits) {
-    const int32_t MASK = (1u << num_bits) - 1;
-    return MASK & (source >> bit_start);
   }
-};
-
-template <typename _T, typename UB_T> struct Float_Point_NumberBase {
-  template <bool is_descend>
-  static __host__ __device__ UB_T GetKeyForRadixSort(_T key) {
-    UB_T key_in = *((UB_T *)&key);
-    return Unsigned_Bits<UB_T>::template GetKeyForRadixSortBase<is_descend>(
-        key_in);
-  };
-};
-
-template <typename _T> struct Float_Point_Number;
-
-template <>
-struct Float_Point_Number<float> : Float_Point_NumberBase<float, int32_t> {};
+}
 
 #if 0
-template <typename KeyT, typename ValueT, bool is_descend>
-void prepare_keys(const ValueT *d_values_in, KeyT *d_keys_in,
-                  int32_t num_items) {
-  for (int32_t i = 0; i < num_items; i++) {
-    d_keys_in[i] =
-        Float_Point_Number<ValueT>::template GetKeyForRadixSort<is_descend>(
-            d_values_in[i]);
-  }
-}
-
-void prepare_indices(int32_t *indices, int32_t num_items) {
-  for (int32_t i = 0; i < num_items; i++) {
-    indices[i] = i;
-  }
-}
-
 template <typename KeyT>
 void extract_keys(KeyT *d_keys_in, KeyT *d_keys_out, int32_t *indices,
                   int32_t num_items, int32_t bit_start, int32_t num_bits) {
@@ -189,11 +144,10 @@ void sort_pairs(const ValueT *d_values_in, ValueT *d_values_out,
 }
 #endif
 
-
 void test_sort() {
-  float *input_gpu;
+  DType *input_gpu;
   cudaMalloc(&input_gpu, sizeof(float) * TEST_INPUT_NUM);
-  float *output_gpu;
+  DType *output_gpu;
   cudaMalloc(&output_gpu, sizeof(float) * TEST_INPUT_NUM);
   int32_t *indices_ptr_out_gpu;
   cudaMalloc(&indices_ptr_out_gpu, sizeof(int32_t) * TEST_INPUT_NUM);
@@ -202,7 +156,7 @@ void test_sort() {
              cudaMemcpyHostToDevice);
 
   // dim3 threadsPerBlock(THREAD_NUM);
-  // dim3 numBlocks(1);
+  // dim3 numBlocks(2);
   // sort_pairs<int32_t, float, false>(input, output, indices_ptr_out,
   //                                   TEST_INPUT_NUM);
 
@@ -218,9 +172,9 @@ void test_sort() {
 
 int main() {
   // test_key<<<1, 2>>>();
-  // test_inc();
-  test_inc2();
   // test_sort();
+  // test_prepare_keys();
+  test_prepare_indices();
   cudaDeviceSynchronize();
   return 0;
 }

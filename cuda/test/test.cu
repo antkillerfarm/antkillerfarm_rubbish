@@ -44,6 +44,15 @@ __global__ void test_inc_kernel2(float *input_gpu, float *output_gpu,
   }
 }
 
+void print_fvec(float* vec, int32_t num_items) {
+  for (int32_t i = 0; i < num_items; i++) {
+    printf("%f, ", (float)(vec[i]));
+    if (i % 10 == 9) {
+      printf("\n");
+    }
+  }
+}
+
 void test_inc() {
   float *input_gpu;
   cudaMalloc(&input_gpu, sizeof(float) * TEST_INPUT_NUM);
@@ -62,12 +71,7 @@ void test_inc() {
   cudaMemcpy(output, output_gpu, sizeof(float) * TEST_INPUT_NUM,
              cudaMemcpyDeviceToHost);
 
-  for (int32_t i = 0; i < TEST_INPUT_NUM; i++) {
-    printf("%f, ", (float)(output[i]));
-    if (i % 10 == 9) {
-      printf("\n");
-    }
-  }
+  print_fvec(output, TEST_INPUT_NUM);
 
   cudaFree(input_gpu);
   cudaFree(output_gpu);
@@ -91,12 +95,7 @@ void test_inc2() {
   cudaMemcpy(output, output_gpu, sizeof(float) * TEST_INPUT_NUM,
              cudaMemcpyDeviceToHost);
 
-  for (int32_t i = 0; i < TEST_INPUT_NUM; i++) {
-    printf("%f, ", (float)(output[i]));
-    if (i % 10 == 9) {
-      printf("\n");
-    }
-  }
+  print_fvec(output, TEST_INPUT_NUM);
 
   cudaFree(input_gpu);
   cudaFree(output_gpu);
