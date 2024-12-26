@@ -17,6 +17,14 @@ float input[TEST_INPUT_NUM] = {
     80.426,  -15.617, -28.778, 35.831,  42.338,  -19.250, 89.067,  -44.727,
     80.168,  -77.544, -60.959, -78.450, -74.932, 20.722,  -22.494, 55.845};
 
+int32_t input_i[TEST_INPUT_NUM] = {
+    -27, -78, 74,  -3,  -63, -70, -89, 96,  -8,  -71, 33,  1,   -44, -75,
+    67,  -28, -22, -84, -40, -34, -47, 83,  -49, -5,  60,  -11, -8,  -48,
+    -52, 58,  49,  76,  -24, -47, -31, 47,  -84, -86, 97,  30,  60,  41,
+    -46, 66,  53,  -37, -28, 99,  -21, 78,  -30, -57, -88, 4,   55,  85,
+    41,  79,  97,  -43, 60,  27,  90,  88,  -57, 33,  -60, 90,  44,  7,
+    -18, -75, -72, 7,   -25, 34,  59,  -35, -13, 58};
+
 float output[TEST_INPUT_NUM];
 int32_t indices_ptr_out[TEST_INPUT_NUM];
 
@@ -36,8 +44,9 @@ int32_t indices[2][TEST_INPUT_NUM];
 __global__ void put_numbers_into_bucket(const int32_t *d_keys_in,
                                         int32_t *offset, int32_t *bucket_offset,
                                         int32_t num_items) {
-  int block_size =
+  int32_t block_size =
       (num_items + (blockDim.x * gridDim.x) - 1) / (blockDim.x * gridDim.x);
+
   for (int32_t i = 0; i < block_size; i++) {
     int32_t idx = i + (blockIdx.x * blockDim.x + threadIdx.x) * block_size;
     if (idx < num_items) {
@@ -50,19 +59,6 @@ __global__ void put_numbers_into_bucket(const int32_t *d_keys_in,
 }
 
 #if 0
-void calc_exclusive_cumsum(const int32_t *value_in, int32_t *exclusive_cumsum,
-                           int32_t num_items) {
-  int32_t sum;
-  for (int32_t i = 0; i < num_items; i++) {
-    if (i == 0) {
-      sum = 0;
-    } else {
-      sum += value_in[i - 1];
-    }
-    exclusive_cumsum[i] = sum;
-  }
-}
-
 void update_indices_ptr(const int32_t *d_keys_in, const int32_t *indices_ptr_in,
                         const int32_t *offset, const int32_t *exclusive_cumsum,
                         int32_t *indices_ptr_out, int32_t num_items) {
@@ -79,14 +75,7 @@ void update_indices_ptr(const int32_t *d_keys_in, const int32_t *indices_ptr_in,
 
 void sort_pairs_loop(const int32_t *d_keys_in, int32_t *indices_ptr_in,
                      int32_t *indices_ptr_out, int32_t num_items) {
-  int32_t num_items_per_thread = num_items / THREAD_NUM;
-  for (int32_t i = 0; i < THREAD_NUM; i++) {
-    for (int32_t j = 0; j < num_items_per_thread; j++) {
-      int32_t idx = j + i * num_items_per_thread;
-      offset[idx] = bucket_offset[d_keys_in[idx]][i];
-      bucket_offset[d_keys_in[idx]][i]++;
-    }
-  }
+  put_numbers_into_bucket(d_keys_in, offset, bucket_offset, num_items);
   calc_exclusive_cumsum((int32_t *)bucket_offset, (int32_t *)exclusive_cumsum,
                         BUCKET_SIZE * THREAD_NUM);
   update_indices_ptr(d_keys_in, indices_ptr_in, offset, (int32_t *)exclusive_cumsum,
@@ -172,7 +161,8 @@ int main() {
   // test_prepare_keys();
   // test_prepare_indices();
   // test_extract_keys();
-  test_put_numbers_into_bucket();
+  // test_put_numbers_into_bucket();
+  test_calc_exclusive_cumsum();
   cudaDeviceSynchronize();
   return 0;
 }

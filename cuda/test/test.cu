@@ -33,10 +33,10 @@ __global__ void test_inc_kernel(float *input_gpu, float *output_gpu,
 
 __global__ void test_inc_kernel2(float *input_gpu, float *output_gpu,
                                  int32_t num_items) {
-  int block_size =
+  int32_t block_size =
       (num_items + (blockDim.x * gridDim.x) - 1) / (blockDim.x * gridDim.x);
   for (int32_t i = 0; i < block_size; i++) {
-    int idx = (blockIdx.x * blockDim.x + threadIdx.x) * block_size + i;
+    int32_t idx = (blockIdx.x * blockDim.x + threadIdx.x) * block_size + i;
     if (idx < num_items) {
       output_gpu[idx] = input_gpu[idx] + 1.0f;
     }

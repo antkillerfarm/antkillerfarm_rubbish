@@ -51,10 +51,10 @@ template <typename KeyT>
 __global__ void extract_keys(KeyT *d_keys_in, KeyT *d_keys_out,
                              int32_t *indices, int32_t num_items,
                              int32_t bit_start, int32_t num_bits) {
-  int block_size =
+  int32_t block_size =
       (num_items + (blockDim.x * gridDim.x) - 1) / (blockDim.x * gridDim.x);
   for (int32_t i = 0; i < block_size; i++) {
-    int idx = (blockIdx.x * blockDim.x + threadIdx.x) * block_size + i;
+    int32_t idx = (blockIdx.x * blockDim.x + threadIdx.x) * block_size + i;
     if (idx < num_items) {
       d_keys_out[idx] = Unsigned_Bits<KeyT>::BitfieldExtract(
           d_keys_in[indices[idx]], bit_start, num_bits);
@@ -78,5 +78,7 @@ void test_prepare_keys();
 void test_prepare_indices();
 void test_extract_keys();
 void test_put_numbers_into_bucket();
+void test_calc_exclusive_cumsum();
 
 extern float input[TEST_INPUT_NUM];
+extern int32_t input_i[TEST_INPUT_NUM];

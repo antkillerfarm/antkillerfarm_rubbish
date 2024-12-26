@@ -169,7 +169,6 @@ void put_numbers_into_bucket(const int32_t *d_keys_in, int32_t *offset,
 void sort_pairs_loop(const int32_t *d_keys_in, int32_t *indices_ptr_in,
                      int32_t *indices_ptr_out, int32_t num_items) {
   put_numbers_into_bucket(d_keys_in, offset, bucket_offset, num_items);
-
   calc_exclusive_cumsum((int32_t *)bucket_offset, (int32_t *)exclusive_cumsum,
                         BUCKET_SIZE * THREAD_NUM);
   update_indices_ptr(d_keys_in, indices_ptr_in, offset,

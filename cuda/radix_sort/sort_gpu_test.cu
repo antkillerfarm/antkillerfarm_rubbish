@@ -53,11 +53,11 @@ __global__ void test_key() {
 template <typename KeyT, typename ValueT, bool is_descend>
 __global__ void prepare_keys(const ValueT *d_values_in, KeyT *d_keys_in,
                              int32_t num_items) {
-  int block_size =
+  int32_t block_size =
       (num_items + (blockDim.x * gridDim.x) - 1) / (blockDim.x * gridDim.x);
 
   for (int32_t i = 0; i < block_size; i++) {
-    int idx = (blockIdx.x * blockDim.x + threadIdx.x) * block_size + i;
+    int32_t idx = (blockIdx.x * blockDim.x + threadIdx.x) * block_size + i;
     if (idx < num_items) {
       d_keys_in[idx] =
           Float_Point_Number<ValueT>::template GetKeyForRadixSort<is_descend>(
@@ -77,10 +77,10 @@ void prepare_keys_cpu(const ValueT *d_values_in, KeyT *d_keys_in,
 }
 
 __global__ void prepare_indices(int32_t *indices, int32_t num_items) {
-  int block_size =
+  int32_t block_size =
       (num_items + (blockDim.x * gridDim.x) - 1) / (blockDim.x * gridDim.x);
   for (int32_t i = 0; i < block_size; i++) {
-    int idx = (blockIdx.x * blockDim.x + threadIdx.x) * block_size + i;
+    int32_t idx = (blockIdx.x * blockDim.x + threadIdx.x) * block_size + i;
     if (idx < num_items) {
       indices[idx] = idx;
     }
@@ -102,24 +102,6 @@ void extract_keys_cpu(KeyT *d_keys_in, KeyT *d_keys_out, int32_t *indices,
   }
 }
 
-#if 0
-void sort_pairs_loop(const int32_t *d_keys_in, int32_t *indices_ptr_in,
-                     int32_t *indices_ptr_out, int32_t num_items) {
-  int32_t num_items_per_thread = num_items / THREAD_NUM;
-  for (int32_t i = 0; i < THREAD_NUM; i++) {
-    for (int32_t j = 0; j < num_items_per_thread; j++) {
-      int32_t idx = j + i * num_items_per_thread;
-      offset[idx] = bucket_offset[d_keys_in[idx]][i];
-      bucket_offset[d_keys_in[idx]][i]++;
-    }
-  }
-  calc_exclusive_cumsum((int32_t *)bucket_offset, (int32_t *)exclusive_cumsum,
-                        BUCKET_SIZE * THREAD_NUM);
-  update_indices_ptr(d_keys_in, indices_ptr_in, offset, (int32_t *)exclusive_cumsum,
-                     indices_ptr_out, num_items);
-}
-#endif
-
 void put_numbers_into_bucket_cpu(const int32_t *d_keys_in, int32_t *offset,
                                  int32_t *bucket_offset, int32_t num_items) {
   int32_t num_items_per_thread = num_items / (BLOCK_NUM * THREAD_NUM);
@@ -132,6 +114,43 @@ void put_numbers_into_bucket_cpu(const int32_t *d_keys_in, int32_t *offset,
         bucket_offset[d_keys_in[idx] * (BLOCK_NUM * THREAD_NUM) + i]++;
       }
     }
+  }
+}
+
+void calc_inclusive_cumsum_cpu(const int32_t *value_in,
+                               int32_t *exclusive_cumsum, int32_t num_items) {
+  int32_t sum;
+  for (int32_t i = 0; i < num_items; i++) {
+    if (i == 0) {
+      sum = value_in[0];
+    } else {
+      sum += value_in[i];
+    }
+    exclusive_cumsum[i] = sum;
+  }
+}
+
+// https://research.nvidia.com/publication/2016-03_single-pass-parallel-prefix-scan-decoupled-look-back
+// Sklansky method
+void calc_inclusive_cumsum_cpu2(const int32_t *value_in,
+                                int32_t *exclusive_cumsum, int32_t num_items) {
+  int32_t num_threads = BLOCK_NUM * THREAD_NUM;
+  int32_t block_size =
+      (num_items + (BLOCK_NUM * THREAD_NUM) - 1) / (BLOCK_NUM * THREAD_NUM);
+  memcpy(exclusive_cumsum, value_in, sizeof(int32_t) * num_items);
+  for (uint32_t s = 1; s <= num_threads; s <<= 1) {
+    for (uint32_t i = 0; i < num_threads; i++) {
+      uint32_t a = (i / s) * (2 * s) + s;
+      // uint32_t a = i + 2 * s;
+      uint32_t ti = a + (i % s);
+      uint32_t si = a - 1;
+      // printf("%d : %d : %d : %d : %d\n", i, s, a, ti, si);
+      if (ti < num_items) {
+        exclusive_cumsum[ti] = exclusive_cumsum[ti] + exclusive_cumsum[si];
+      }
+    }
+    // printf("%d :\n", s);
+    // print_ivec(exclusive_cumsum, num_items);
   }
 }
 
@@ -324,4 +343,23 @@ void test_put_numbers_into_bucket() {
   free(offset_cpu2);
   free(bucket_offset_cpu);
   free(bucket_offset_cpu2);
+}
+
+#define TEST_INPUT_NUM2 80
+void test_calc_exclusive_cumsum() {
+  int32_t *output_cpu = (int32_t *)malloc(sizeof(int32_t) * TEST_INPUT_NUM);
+  int32_t *output_cpu2 = (int32_t *)malloc(sizeof(int32_t) * TEST_INPUT_NUM);
+
+  calc_inclusive_cumsum_cpu(input_i, output_cpu, TEST_INPUT_NUM2);
+  calc_inclusive_cumsum_cpu2(input_i, output_cpu2, TEST_INPUT_NUM2);
+
+  printf("input:\n");
+  print_ivec(input_i, TEST_INPUT_NUM2);
+  printf("cpu:\n");
+  print_ivec(output_cpu, TEST_INPUT_NUM2);
+  printf("cpu2:\n");
+  print_ivec(output_cpu2, TEST_INPUT_NUM2);
+
+  free(output_cpu);
+  free(output_cpu2);
 }
