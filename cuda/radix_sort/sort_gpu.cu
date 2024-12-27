@@ -59,20 +59,6 @@ __global__ void put_numbers_into_bucket(const int32_t *d_keys_in,
 }
 
 #if 0
-void update_indices_ptr(const int32_t *d_keys_in, const int32_t *indices_ptr_in,
-                        const int32_t *offset, const int32_t *exclusive_cumsum,
-                        int32_t *indices_ptr_out, int32_t num_items) {
-  int32_t num_items_per_thread = num_items / THREAD_NUM;
-  for (int32_t i = 0; i < THREAD_NUM; i++) {
-    for (int32_t j = 0; j < num_items_per_thread; j++) {
-      int32_t idx0 = j + i * num_items_per_thread;
-      int32_t idx = offset[idx0] + exclusive_cumsum[d_keys_in[idx0] * THREAD_NUM + i];
-      indices_ptr_out[idx] = indices_ptr_in[idx0];
-      bfe_keys_out[idx] = bfe_keys[idx0];
-    }
-  }
-}
-
 void sort_pairs_loop(const int32_t *d_keys_in, int32_t *indices_ptr_in,
                      int32_t *indices_ptr_out, int32_t num_items) {
   put_numbers_into_bucket(d_keys_in, offset, bucket_offset, num_items);
@@ -162,7 +148,8 @@ int main() {
   // test_prepare_indices();
   // test_extract_keys();
   // test_put_numbers_into_bucket();
-  test_calc_exclusive_cumsum();
+  // test_calc_exclusive_cumsum();
+  test_update_indices_ptr();
 
   cudaDeviceSynchronize();
   return 0;

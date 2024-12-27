@@ -1,5 +1,5 @@
 #define TEST_INPUT_NUM 80
-#define THREAD_NUM 16
+#define THREAD_NUM 4
 #define BLOCK_NUM 1
 #define BUCKET_WIDTH 8
 #define BUCKET_SIZE (1 << BUCKET_WIDTH)
@@ -107,6 +107,7 @@ void test_prepare_indices();
 void test_extract_keys();
 void test_put_numbers_into_bucket();
 void test_calc_exclusive_cumsum();
+void test_update_indices_ptr();
 
 extern float input[TEST_INPUT_NUM];
 extern int32_t input_i[TEST_INPUT_NUM];
