@@ -163,6 +163,7 @@ int main() {
   // test_extract_keys();
   // test_put_numbers_into_bucket();
   test_calc_exclusive_cumsum();
+
   cudaDeviceSynchronize();
   return 0;
 }

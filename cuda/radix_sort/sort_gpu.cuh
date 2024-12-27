@@ -1,6 +1,6 @@
 #define TEST_INPUT_NUM 80
-#define THREAD_NUM 2
-#define BLOCK_NUM 2
+#define THREAD_NUM 16
+#define BLOCK_NUM 1
 #define BUCKET_WIDTH 8
 #define BUCKET_SIZE (1 << BUCKET_WIDTH)
 
@@ -44,8 +44,10 @@ template <>
 struct Float_Point_Number<float> : Float_Point_NumberBase<float, int32_t> {};
 
 // extern __global__ void prepare_indices(int32_t *indices, int32_t num_items);
-extern __global__ void put_numbers_into_bucket(const int32_t *d_keys_in, int32_t *offset,
-                     int32_t *bucket_offset, int32_t num_items);
+extern __global__ void put_numbers_into_bucket(const int32_t *d_keys_in,
+                                               int32_t *offset,
+                                               int32_t *bucket_offset,
+                                               int32_t num_items);
 
 template <typename KeyT>
 __global__ void extract_keys(KeyT *d_keys_in, KeyT *d_keys_out,
@@ -64,15 +66,41 @@ __global__ void extract_keys(KeyT *d_keys_in, KeyT *d_keys_out,
 
 template <typename KeyT, typename ValueT, bool is_descend>
 void prepare_keys_cpu(const ValueT *d_values_in, KeyT *d_keys_in,
-                      int32_t num_items);
+                      int32_t num_items) {
+  for (int32_t i = 0; i < num_items; i++) {
+    d_keys_in[i] =
+        Float_Point_Number<ValueT>::template GetKeyForRadixSort<is_descend>(
+            d_values_in[i]);
+  }
+}
 
 template <typename KeyT>
 void extract_keys_cpu(KeyT *d_keys_in, KeyT *d_keys_out, int32_t *indices,
-                      int32_t num_items, int32_t bit_start, int32_t num_bits);
+                      int32_t num_items, int32_t bit_start, int32_t num_bits) {
+  for (int32_t i = 0; i < num_items; i++) {
+    d_keys_out[i] = Unsigned_Bits<KeyT>::BitfieldExtract(d_keys_in[indices[i]],
+                                                         bit_start, num_bits);
+  }
+}
+
+__global__ void calc_exclusive_cumsum(const int32_t *value_in,
+                                int32_t *exclusive_cumsum, int32_t num_items);
+
+void prepare_indices_cpu(int32_t *indices, int32_t num_items);
+
+void put_numbers_into_bucket_cpu(const int32_t *d_keys_in, int32_t *offset,
+                                 int32_t *bucket_offset, int32_t num_items);
+
+void calc_exclusive_cumsum_cpu(const int32_t *value_in,
+                               int32_t *exclusive_cumsum, int32_t num_items);
+
+void calc_exclusive_cumsum_cpu2(const int32_t *value_in,
+                                int32_t *exclusive_cumsum, int32_t num_items);
 
 void print_ivec(int32_t *vec, int32_t num_items);
 void print_ixvec(int32_t *vec, int32_t num_items);
 void print_fvec(float *vec, int32_t num_items);
+void print_ivec_sum(int32_t *vec, int32_t num_items);
 
 void test_prepare_keys();
 void test_prepare_indices();
