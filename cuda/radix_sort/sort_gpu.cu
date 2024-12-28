@@ -28,19 +28,6 @@ int32_t input_i[TEST_INPUT_NUM] = {
 // float output[TEST_INPUT_NUM];
 // int32_t indices_ptr_out[TEST_INPUT_NUM];
 
-#if 0
-int32_t keys[TEST_INPUT_NUM] = {0};
-int32_t bfe_keys[TEST_INPUT_NUM] = {0};
-int32_t bfe_keys_out[TEST_INPUT_NUM] = {0};
-int32_t offset[TEST_INPUT_NUM] = {0};
-// int32_t bucket_offset[BUCKET_SIZE] = {0};
-// int32_t curr_count[THREAD_NUM] = {0};
-int32_t bucket_offset[BUCKET_SIZE][THREAD_NUM] = {0};
-int32_t exclusive_cumsum[BUCKET_SIZE][THREAD_NUM] = {0};
-// int32_t exclusive_cumsum[BUCKET_SIZE] = {0};
-int32_t indices[2][TEST_INPUT_NUM];
-#endif
-
 __global__ void put_numbers_into_bucket(const int32_t *d_keys_in,
                                         int32_t *offset, int32_t *bucket_offset,
                                         int32_t num_items) {
@@ -57,33 +44,6 @@ __global__ void put_numbers_into_bucket(const int32_t *d_keys_in,
     }
   }
 }
-
-#if 0
-void sort_pairs_loop(const int32_t *d_keys_in, int32_t *indices_ptr_in,
-                     int32_t *indices_ptr_out, int32_t num_items) {
-  put_numbers_into_bucket(d_keys_in, offset, bucket_offset, num_items);
-  calc_exclusive_cumsum((int32_t *)bucket_offset, (int32_t *)exclusive_cumsum,
-                        BUCKET_SIZE * THREAD_NUM);
-  update_indices_ptr(d_keys_in, indices_ptr_in, offset, (int32_t *)exclusive_cumsum,
-                     indices_ptr_out, num_items);
-}
-
-template <typename KeyT, typename ValueT, bool is_descend>
-void sort_pairs(const ValueT *d_values_in, ValueT *d_values_out,
-                int32_t *indices_ptr, int32_t num_items) {
-  int32_t loop_count = sizeof(KeyT) * 8 / BUCKET_WIDTH;
-  prepare_keys<KeyT, ValueT, is_descend>(d_values_in, keys, num_items);
-  prepare_indices(indices[0], num_items);
-  for (int32_t i = 0; i < loop_count; i++) {
-    int32_t begin_bit = (i)*BUCKET_WIDTH;
-    extract_keys(keys, bfe_keys, indices[i % 2], num_items, begin_bit,
-                 BUCKET_WIDTH);
-    sort_pairs_loop(bfe_keys, indices[i % 2], indices[(i + 1) % 2], num_items);
-    memset(bucket_offset, 0, sizeof(int32_t) * BUCKET_SIZE * THREAD_NUM);
-  }
-  post_process(d_values_in, d_values_out, indices[0], indices_ptr, num_items);
-}
-#endif
 
 #define TEST_INPUT_NUM2 8
 void test_sort() {
@@ -109,6 +69,7 @@ void test_sort() {
   cudaMalloc(&indices1, sizeof(int32_t) * TEST_INPUT_NUM);
 
   DType *output_cpu = (DType *)malloc(sizeof(DType) * TEST_INPUT_NUM);
+  DType *output_cpu2 = (DType *)malloc(sizeof(DType) * TEST_INPUT_NUM);
   // KType *keys_cpu = (KType *)malloc(sizeof(KType) * TEST_INPUT_NUM);
   KType *keys_cpu2 = (KType *)malloc(sizeof(KType) * TEST_INPUT_NUM);
   // int32_t *bfe_keys_cpu = (int32_t *)malloc(sizeof(int32_t) *
@@ -143,7 +104,8 @@ void test_sort() {
     cudaMemset(bucket_offset, 0,
                sizeof(int32_t) * BUCKET_SIZE * THREAD_NUM * BLOCK_NUM);
     extract_keys<KType><<<numBlocks, threadsPerBlock>>>(
-        keys, bfe_keys, indices_ptr[i % 2], TEST_INPUT_NUM2, begin_bit, BUCKET_WIDTH);
+        keys, bfe_keys, indices_ptr[i % 2], TEST_INPUT_NUM2, begin_bit,
+        BUCKET_WIDTH);
     put_numbers_into_bucket<<<numBlocks, threadsPerBlock>>>(
         bfe_keys, offset, bucket_offset, TEST_INPUT_NUM2);
     calc_exclusive_cumsum<<<numBlocks, threadsPerBlock>>>(
@@ -151,8 +113,10 @@ void test_sort() {
     update_indices_ptr<<<numBlocks, threadsPerBlock>>>(
         bfe_keys, indices_ptr[i % 2], offset, exclusive_cumsum,
         indices_ptr[(i + 1) % 2], TEST_INPUT_NUM2);
-  }
 
+  }
+  post_process<<<numBlocks, threadsPerBlock>>>(input_gpu, output, indices_ptr[0], indices_ptr[0],
+                   TEST_INPUT_NUM2);
 
   cudaMemcpy(offset_cpu, offset, sizeof(int32_t) * TEST_INPUT_NUM,
              cudaMemcpyDeviceToHost);
@@ -168,6 +132,9 @@ void test_sort() {
   cudaMemcpy(indices1_cpu, indices, sizeof(int32_t) * TEST_INPUT_NUM,
              cudaMemcpyDeviceToHost);
 
+  cudaMemcpy(output_cpu, output, sizeof(int32_t) * TEST_INPUT_NUM,
+             cudaMemcpyDeviceToHost);
+
   printf("gpu:\n");
   // print_ivec(offset_cpu, TEST_INPUT_NUM2);
   // print_ivec(bucket_offset_cpu, BUCKET_SIZE * THREAD_NUM * BLOCK_NUM);
@@ -175,6 +142,7 @@ void test_sort() {
   // print_ivec(exclusive_cumsum_cpu, BUCKET_SIZE * THREAD_NUM * BLOCK_NUM);
   printf("indices1:\n");
   print_ivec(indices1_cpu, TEST_INPUT_NUM2);
+  print_fvec(output_cpu, TEST_INPUT_NUM2);
 
   prepare_keys_cpu<KType, DType, false>(input, keys_cpu2, TEST_INPUT_NUM2);
   printf("keys_cpu2:\n");
@@ -200,7 +168,7 @@ void test_sort() {
     printf("indices1:\n");
     print_ivec(indices_ptr_cpu[(i + 1) % 2], TEST_INPUT_NUM2);
   }
-  post_process_cpu(input, output_cpu, indices_ptr_cpu[0], indices_ptr_cpu[0],
+  post_process_cpu(input, output_cpu2, indices_ptr_cpu[0], indices_ptr_cpu[0],
                    TEST_INPUT_NUM2);
 
   printf("cpu:\n");
@@ -209,7 +177,7 @@ void test_sort() {
   // print_ivec(bucket_offset_cpu2, BUCKET_SIZE * THREAD_NUM * BLOCK_NUM);
   // print_ivec_sum(bucket_offset_cpu2, BUCKET_SIZE * THREAD_NUM * BLOCK_NUM);
   // print_ivec(exclusive_cumsum_cpu2, BUCKET_SIZE * THREAD_NUM * BLOCK_NUM);
-  print_fvec(output_cpu, TEST_INPUT_NUM2);
+  print_fvec(output_cpu2, TEST_INPUT_NUM2);
 
   cudaFree(input_gpu);
   cudaFree(keys);
@@ -220,6 +188,8 @@ void test_sort() {
   cudaFree(exclusive_cumsum);
   cudaFree(indices1);
 
+  free(output_cpu);
+  free(output_cpu2);
   // free(keys_cpu);
   free(keys_cpu2);
   // free(bfe_keys_cpu);
