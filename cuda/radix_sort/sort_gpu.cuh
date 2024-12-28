@@ -65,6 +65,32 @@ __global__ void extract_keys(KeyT *d_keys_in, KeyT *d_keys_out,
 }
 
 template <typename KeyT, typename ValueT, bool is_descend>
+__global__ void prepare_keys(const ValueT *d_values_in, KeyT *d_keys_in,
+                             int32_t num_items) {
+  int32_t block_size =
+      (num_items + (blockDim.x * gridDim.x) - 1) / (blockDim.x * gridDim.x);
+
+  for (int32_t i = 0; i < block_size; i++) {
+    int32_t idx = (blockIdx.x * blockDim.x + threadIdx.x) * block_size + i;
+    if (idx < num_items) {
+      d_keys_in[idx] =
+          Float_Point_Number<ValueT>::template GetKeyForRadixSort<is_descend>(
+              d_values_in[idx]);
+    }
+  }
+}
+
+__global__ void prepare_indices(int32_t *indices, int32_t num_items);
+
+__global__ void calc_exclusive_cumsum(const int32_t *value_in,
+                                int32_t *exclusive_cumsum, int32_t num_items);
+
+__global__ void
+update_indices_ptr(const int32_t *d_keys_in, const int32_t *indices_ptr_in,
+                   const int32_t *offset, const int32_t *exclusive_cumsum,
+                   int32_t *indices_ptr_out, int32_t num_items);
+
+template <typename KeyT, typename ValueT, bool is_descend>
 void prepare_keys_cpu(const ValueT *d_values_in, KeyT *d_keys_in,
                       int32_t num_items) {
   for (int32_t i = 0; i < num_items; i++) {
@@ -83,8 +109,17 @@ void extract_keys_cpu(KeyT *d_keys_in, KeyT *d_keys_out, int32_t *indices,
   }
 }
 
-__global__ void calc_exclusive_cumsum(const int32_t *value_in,
-                                int32_t *exclusive_cumsum, int32_t num_items);
+template <typename ValueT>
+void post_process_cpu(const ValueT *d_values_in, ValueT *d_values_out,
+                  int32_t *indices_ptr, int32_t *indices_ptr_out,
+                  int32_t num_items) {
+  for (int32_t i = 0; i < num_items; i++) {
+    if (indices_ptr_out != indices_ptr) {
+      indices_ptr_out[i] = indices_ptr[i];
+    }
+    d_values_out[i] = d_values_in[indices_ptr[i]];
+  }
+}
 
 void prepare_indices_cpu(int32_t *indices, int32_t num_items);
 
@@ -96,6 +131,14 @@ void calc_exclusive_cumsum_cpu(const int32_t *value_in,
 
 void calc_exclusive_cumsum_cpu2(const int32_t *value_in,
                                 int32_t *exclusive_cumsum, int32_t num_items);
+
+void update_indices_ptr_cpu(const int32_t *d_keys_in, const int32_t *indices_ptr_in,
+                        const int32_t *offset, const int32_t *exclusive_cumsum,
+                        int32_t *indices_ptr_out, int32_t num_items);
+
+void update_indices_ptr_cpu2(const int32_t *d_keys_in, const int32_t *indices_ptr_in,
+                        const int32_t *offset, const int32_t *exclusive_cumsum,
+                        int32_t *indices_ptr_out, int32_t num_items);
 
 void print_ivec(int32_t *vec, int32_t num_items);
 void print_ixvec(int32_t *vec, int32_t num_items);

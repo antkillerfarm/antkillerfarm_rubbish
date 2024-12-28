@@ -78,7 +78,7 @@ void calc_exclusive_cumsum_cpu(const int32_t *value_in,
     if (i == 0) {
       sum = 0;
     } else {
-      sum += value_in[i-1];
+      sum += value_in[i - 1];
     }
     exclusive_cumsum[i] = sum;
   }
@@ -193,25 +193,54 @@ __global__ void calc_exclusive_cumsum(const int32_t *value_in,
   }
 }
 
-void update_indices_ptr_cpu(const int32_t *d_keys_in, const int32_t *indices_ptr_in,
-                        const int32_t *offset, const int32_t *exclusive_cumsum,
-                        int32_t *indices_ptr_out, int32_t num_items) {
+void update_indices_ptr_cpu(const int32_t *d_keys_in,
+                            const int32_t *indices_ptr_in,
+                            const int32_t *offset,
+                            const int32_t *exclusive_cumsum,
+                            int32_t *indices_ptr_out, int32_t num_items) {
   for (int32_t i = 0; i < num_items; i++) {
     int32_t idx = offset[i] + exclusive_cumsum[d_keys_in[i]];
+    // printf("XX: %d : %d : %d : %d\n", i, offset[i], d_keys_in[i],
+    //        exclusive_cumsum[d_keys_in[i]]);
     indices_ptr_out[idx] = indices_ptr_in[i];
     // bfe_keys_out[idx] = bfe_keys[i];
   }
 }
 
-void update_indices_ptr_cpu2(const int32_t *d_keys_in, const int32_t *indices_ptr_in,
-                        const int32_t *offset, const int32_t *exclusive_cumsum,
-                        int32_t *indices_ptr_out, int32_t num_items) {
+void update_indices_ptr_cpu2(const int32_t *d_keys_in,
+                             const int32_t *indices_ptr_in,
+                             const int32_t *offset,
+                             const int32_t *exclusive_cumsum,
+                             int32_t *indices_ptr_out, int32_t num_items) {
   int32_t num_threads = BLOCK_NUM * THREAD_NUM;
   int32_t num_items_per_thread = (num_items + num_threads - 1) / num_threads;
   for (int32_t i = 0; i < num_threads; i++) {
     for (int32_t j = 0; j < num_items_per_thread; j++) {
       int32_t idx0 = j + i * num_items_per_thread;
-      int32_t idx = offset[idx0] + exclusive_cumsum[d_keys_in[idx0] * num_threads + i];
+      if (idx0 < num_items) {
+        int32_t idx =
+            offset[idx0] + exclusive_cumsum[d_keys_in[idx0] * num_threads + i];
+
+        indices_ptr_out[idx] = indices_ptr_in[idx0];
+        // bfe_keys_out[idx] = bfe_keys[idx0];
+      }
+    }
+  }
+}
+
+__global__ void
+update_indices_ptr(const int32_t *d_keys_in, const int32_t *indices_ptr_in,
+                   const int32_t *offset, const int32_t *exclusive_cumsum,
+                   int32_t *indices_ptr_out, int32_t num_items) {
+  int32_t num_threads = blockDim.x * gridDim.x;
+  int32_t num_items_per_thread = (num_items + num_threads - 1) / num_threads;
+  for (int32_t j = 0; j < num_items_per_thread; j++) {
+    int32_t idx0 =
+        j + (blockIdx.x * blockDim.x + threadIdx.x) * num_items_per_thread;
+    if (idx0 < num_items) {
+      int32_t idx = offset[idx0] +
+                    exclusive_cumsum[d_keys_in[idx0] * num_threads +
+                                     (blockIdx.x * blockDim.x + threadIdx.x)];
       indices_ptr_out[idx] = indices_ptr_in[idx0];
       // bfe_keys_out[idx] = bfe_keys[idx0];
     }
