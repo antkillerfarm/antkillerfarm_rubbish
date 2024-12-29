@@ -58,7 +58,8 @@ void prepare_indices_cpu(int32_t *indices, int32_t num_items) {
 
 void put_numbers_into_bucket_cpu(const int32_t *d_keys_in, int32_t *offset,
                                  int32_t *bucket_offset, int32_t num_items) {
-  int32_t num_items_per_thread = num_items / (BLOCK_NUM * THREAD_NUM);
+  int32_t num_threads = BLOCK_NUM * THREAD_NUM;
+  int32_t num_items_per_thread = (num_items + num_threads - 1) / num_threads;
   for (int32_t i = 0; i < (BLOCK_NUM * THREAD_NUM); i++) {
     for (int32_t j = 0; j < num_items_per_thread; j++) {
       int32_t idx = j + i * num_items_per_thread;
@@ -220,7 +221,6 @@ void update_indices_ptr_cpu2(const int32_t *d_keys_in,
       if (idx0 < num_items) {
         int32_t idx =
             offset[idx0] + exclusive_cumsum[d_keys_in[idx0] * num_threads + i];
-
         indices_ptr_out[idx] = indices_ptr_in[idx0];
         // bfe_keys_out[idx] = bfe_keys[idx0];
       }

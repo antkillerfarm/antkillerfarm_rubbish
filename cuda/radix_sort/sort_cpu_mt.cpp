@@ -138,7 +138,7 @@ void calc_exclusive_cumsum(const int32_t *value_in, int32_t *exclusive_cumsum,
 void update_indices_ptr(const KType *d_keys_in, const int32_t *indices_ptr_in,
                         const int32_t *offset, const int32_t *exclusive_cumsum,
                         int32_t *indices_ptr_out, int32_t num_items) {
-  int32_t num_items_per_thread = num_items / THREAD_NUM;
+  int32_t num_items_per_thread = (num_items + THREAD_NUM -1) / THREAD_NUM;
   for (int32_t i = 0; i < THREAD_NUM; i++) {
     for (int32_t j = 0; j < num_items_per_thread; j++) {
       int32_t idx0 = j + i * num_items_per_thread;
@@ -154,7 +154,7 @@ void update_indices_ptr(const KType *d_keys_in, const int32_t *indices_ptr_in,
 
 void put_numbers_into_bucket(const int32_t *d_keys_in, int32_t *offset,
                              int32_t *bucket_offset, int32_t num_items) {
-  int32_t num_items_per_thread = num_items / THREAD_NUM;
+  int32_t num_items_per_thread = (num_items + THREAD_NUM -1) / THREAD_NUM;
   for (int32_t i = 0; i < THREAD_NUM; i++) {
     for (int32_t j = 0; j < num_items_per_thread; j++) {
       int32_t idx = j + i * num_items_per_thread;
