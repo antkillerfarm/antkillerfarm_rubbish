@@ -23,6 +23,33 @@ float input[TEST_INPUT_NUM] = {
 
 float output[TEST_INPUT_NUM];
 
+void transform_dims(int32_t *input, int32_t *output, int32_t num_items,
+                    int32_t outer_size, int32_t dim_size, int32_t inter_size) {
+  for (int32_t idx = 0; idx < num_items; idx++) {
+    int32_t k = idx % inter_size;
+    int32_t rest = idx / inter_size;
+    int32_t j = rest % dim_size;
+    int32_t i = rest / dim_size;
+    int32_t idx0 = i * (dim_size * inter_size) + k * dim_size + j;
+    // printf("KK: %d : %d : %d : %d ; %d\n", idx, i, j, k, idx0);
+    output[idx0] = input[idx];
+  }
+}
+
+void reverse_transform_dims(int32_t *input, int32_t *output, int32_t num_items,
+                            int32_t outer_size, int32_t dim_size,
+                            int32_t inter_size) {
+  for (int32_t idx = 0; idx < num_items; idx++) {
+    int32_t k = idx % inter_size;
+    int32_t rest = idx / inter_size;
+    int32_t j = rest % dim_size;
+    int32_t i = rest / dim_size;
+    int32_t idx0 = i * (dim_size * inter_size) + k * dim_size + j;
+    // printf("KK: %d : %d : %d : %d ; %d\n", idx, i, j, k, idx0);
+    output[idx] = input[idx0];
+  }
+}
+
 __global__ void test_inc_kernel(float *input_gpu, float *output_gpu,
                                 int32_t num_items) {
   int idx = blockIdx.x * blockDim.x + threadIdx.x;
@@ -43,13 +70,23 @@ __global__ void test_inc_kernel2(float *input_gpu, float *output_gpu,
   }
 }
 
-void print_fvec(float* vec, int32_t num_items) {
+void print_fvec(float *vec, int32_t num_items) {
   for (int32_t i = 0; i < num_items; i++) {
     printf("%f, ", (float)(vec[i]));
     if (i % 10 == 9) {
       printf("\n");
     }
   }
+}
+
+void print_ivec(int32_t *vec, int32_t num_items) {
+  for (int32_t i = 0; i < num_items; i++) {
+    printf("%d, ", vec[i]);
+    if (i % 10 == 9) {
+      printf("\n");
+    }
+  }
+  printf("\n");
 }
 
 void test_inc() {
@@ -88,8 +125,7 @@ void test_inc2() {
   dim3 numBlocks(4);
   printf("numBlocks: %d, threadsPerBlock: %d\n", numBlocks.x,
          threadsPerBlock.x);
-  test_inc_kernel2<<<numBlocks, threadsPerBlock>>>(input_gpu, output_gpu,
-                                                   79);
+  test_inc_kernel2<<<numBlocks, threadsPerBlock>>>(input_gpu, output_gpu, 79);
 
   cudaMemcpy(output, output_gpu, sizeof(float) * TEST_INPUT_NUM,
              cudaMemcpyDeviceToHost);
@@ -100,9 +136,40 @@ void test_inc2() {
   cudaFree(output_gpu);
 }
 
-int main(){
+// tensor([[[17,  8,  1, 18],
+//          [10,  3,  2, 18],
+//          [ 3,  6, 11,  6]],
 
-    // test_inc();
-    test_inc2();
-    cudaDeviceSynchronize();
+//         [[15, 15, 18,  4],
+//          [10,  7,  9, 15],
+//          [ 9, 14,  1, 13]]])
+
+#define TEST_INPUT_NUM2 (2 * 3 * 4)
+
+int32_t input_dims[TEST_INPUT_NUM2] = {17, 8, 1,  18, 10, 3,  2,  18,
+                                       3,  6, 11, 6,  15, 15, 18, 4,
+                                       10, 7, 9,  15, 9,  14, 1,  13};
+int32_t output_dims[TEST_INPUT_NUM2];
+
+void test_transform_dims() {
+  transform_dims(input_dims, output_dims, TEST_INPUT_NUM2, 2, 3, 4);
+  print_ivec(output_dims, TEST_INPUT_NUM2);
+  // 17, 10, 3, 8, 3, 6, 1, 2, 11, 18,
+  // 18, 6, 15, 10, 9, 15, 7, 14, 18, 9,
+  // 1, 4, 15, 13,
+  transform_dims(input_dims, output_dims, TEST_INPUT_NUM2, 1, 2, 12);
+  print_ivec(output_dims, TEST_INPUT_NUM2);
+  // 17, 15, 8, 15, 1, 18, 18, 4, 10, 10,
+  // 3, 7, 2, 9, 18, 15, 3, 9, 6, 14,
+  // 11, 1, 6, 13,
+  reverse_transform_dims(output_dims, input_dims, TEST_INPUT_NUM2, 1, 2, 12);
+  print_ivec(input_dims, TEST_INPUT_NUM2);
+}
+
+int main() {
+
+  // test_inc();
+  // test_inc2();
+  test_transform_dims();
+  cudaDeviceSynchronize();
 }
